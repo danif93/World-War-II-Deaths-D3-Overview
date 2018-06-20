@@ -1,0 +1,88 @@
+body, html {
+  font-family: "Quicksand", sans-serif;
+  font-size: 24px;
+  height: 90%;
+}
+
+
+.btn-change{
+  width: 130px;
+
+}
+
+.my_comtainer{
+  padding-top: 30px;
+  height: 100%
+}
+
+
+/* in map.html*/
+
+
+.page_container{
+  height: 100%;
+  margin-top: 20px;
+}
+
+.timeline {
+  height: 100%;
+  background-color: blue;
+}
+
+.map{
+  /*background-color: green;*/
+  height: 100%;
+}
+
+.events{
+  background-color: red;
+  height: 100%;
+}
+
+
+/* in Comparison.html */
+
+.bubblechart{
+  height: 95%;
+  background-color: green;
+}
+
+.stack_cake{
+  height: 95%;
+}
+
+.stackchart{
+  height: 100%;
+  background-color: red;
+}
+
+.cakechart{
+  height: 100%;
+  background-color: blue;
+}
+
+
+/* in Comparison.html */
+.states{
+  height: 100%;
+  background-color: green;
+}
+
+.linechart{
+  height: 100%;
+  background-color: red;
+}
+
+
+/* countries */
+.countries {
+    stroke: #f7f7f7;
+    fill: #d9d9d9;
+}
+
+.grat {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1px;
+    opacity: .2;
+}
