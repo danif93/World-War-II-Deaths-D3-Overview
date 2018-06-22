@@ -6,7 +6,7 @@ var projection;
 function drawMap (world, year) {
   var path = d3.geoPath();
   d3.select("#map").selectAll("path")
-                   .data(topojson.feature(world, world.objects.April_1945).features)
+                   .data(topojson.feature(world, world.objects[year]).features)
                    .enter()
                    .append("path")
                    .attr("d", path)
@@ -14,24 +14,31 @@ function drawMap (world, year) {
                    .attr('id', function(d){
                      return d.properties.status
                    });
-  console.log(world);
-  setimeLine(year);
 }
 
 
-function setimeLine(year){
+
+
+function setimeLine(){
 
 //tutta sta parte deve andare dentro un onClick()
-  var list_events = []
+  var list_events_inside = []
+  var list_events_outside = []
 
   Events.forEach(function(ev){
-    if (ev.DATE == year && ev.event_pos[0] != 0){
-      list_events.push(ev)
+    if (ev.DATE == year) {
+      if (ev.event_pos[0] != 0){
+        list_events_inside.push(ev)
+      }
+      else {
+        list_events_outside.push(ev)
+      }
     }
   })
 
-  updateMap(list_events)
-  //drawMap(year)
+  //loadMap(year)
+  updateMap(list_events_inside)
+  updateOutEvents(list_events_outside)
 
 }
 
@@ -109,12 +116,16 @@ function updateMap(list_events) {
 }
 
 
+function updateOutEvents(list_events) {
 
+}
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////  LOAD FILE   //////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
 
 function loadMap (year) {
   d3.json("../datasets/TopoJsonFinal/"+year+".json", function (error, world) {
@@ -135,7 +146,7 @@ d3.csv("../datasets/events.csv", function (error, csv_events) {
     csv_events.forEach(function (d) {
       d.event_pos = [+d.LAT, +d.LON];
     });
-    // Store csv data in a global variable
+
     Events = csv_events;
 
 });
@@ -162,5 +173,5 @@ d3.csv("../datasets/WWII_casualties.csv", function (error, csv) {
 
 
 window.onload = () => {
-  loadMap("April_1945")
+  loadMap("April_1938")
 }
