@@ -26,7 +26,7 @@ body, html {
 
 .timeline {
   height: 100%;
-  background-color: blue;
+  /*background-color: blue;*/
 }
 
 .map{
@@ -35,8 +35,57 @@ body, html {
 }
 
 .events{
-  background-color: red;
+  /*background-color: red;*/
   height: 100%;
+}
+
+
+/* countries */
+
+.countries {
+    stroke: #f7f7f7;
+    fill: #d9d9d9;
+}
+
+.axis {
+  stroke: #f7f7f7;
+  fill: #BF360C;
+}
+
+.axis_occupied{
+  stroke: #f7f7f7;
+  fill: #EF5350;
+}
+
+.allies{
+  stroke: #f7f7f7;
+  fill: #0277BD;
+}
+
+.neutral{
+  stroke: #f7f7f7;
+  fill: #d9d9d9;
+}
+
+.gold {
+    fill: #FFD700;
+    opacity: .8;
+    stroke: #252525;
+    stroke-width: 1px;
+}
+
+.tooltip {
+    position: absolute;
+    line-height: .7;
+    font-weight: bold;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    width: 360px;
+    font-weight: bold;
+    font: 10px sans-serif;
+    border-radius: 4px;
+    pointer-events: none;
 }
 
 
@@ -71,18 +120,4 @@ body, html {
 .linechart{
   height: 100%;
   background-color: red;
-}
-
-
-/* countries */
-.countries {
-    stroke: #f7f7f7;
-    fill: #d9d9d9;
-}
-
-.grat {
-    fill: none;
-    stroke: grey;
-    stroke-width: 1px;
-    opacity: .2;
 }
