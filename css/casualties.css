@@ -1,0 +1,18 @@
+.bubblechart{
+  height: 95%;
+  background-color: green;
+}
+
+.stack_pie{
+  height: 95%;
+}
+
+.stackchart{
+  height: 100%;
+  background-color: red;
+}
+
+.piechart{
+  height: 100%;
+  background-color: blue;
+}

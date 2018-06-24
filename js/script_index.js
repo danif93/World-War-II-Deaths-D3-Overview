@@ -17,8 +17,6 @@ function drawMap (world, year) {
 }
 
 
-
-
 function setimeLine(){
 
 //tutta sta parte deve andare dentro un onClick()
@@ -41,11 +39,6 @@ function setimeLine(){
   updateOutEvents(list_events_outside)
 
 }
-
-
-
-
-
 
 
 function clearMap() {
@@ -131,7 +124,7 @@ function loadMap (year) {
   d3.json("../datasets/TopoJsonFinal/"+year+".json", function (error, world) {
       if (error) {
           console.log(error);
-  	throw error;
+  	      throw error;
       }
     drawMap(world, year);
   });
@@ -171,7 +164,6 @@ d3.csv("../datasets/WWII_casualties.csv", function (error, csv) {
 
 */
 
-
 window.onload = () => {
-  loadMap("April_1938")
+  loadMap("April_1945")
 }
