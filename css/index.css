@@ -88,6 +88,16 @@ body, html {
     pointer-events: none;
 }
 
+#xAxis path {
+    fill: none;
+    stroke: black;
+}
+
+#xAxis text{
+    font-size: 14px;
+
+}
+
 
 /* in Comparison.html */
 

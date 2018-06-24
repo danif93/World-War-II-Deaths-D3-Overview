@@ -1,9 +1,8 @@
-var WWII_casualties;
+var allYear;
 var Events;
-var projection;
-
 
 function drawMap (world, year) {
+
   var path = d3.geoPath();
   d3.select("#map").selectAll("path")
                    .data(topojson.feature(world, world.objects[year]).features)
@@ -14,6 +13,24 @@ function drawMap (world, year) {
                    .attr('id', function(d){
                      return d.properties.status
                    });
+
+
+  var xScale = d3.scaleBand()
+                 .range([50,1350])
+                 .padding(0.5);
+
+  xScale.domain(allYear.map(function(d){
+                              return d.year
+                            }));
+
+  d3.select("#xAxis")
+    .call(d3.axisBottom(xScale))
+    .attr("transform", "translate(0)")
+    .selectAll("text")
+    .attr("y", 20)
+    .attr("x", 0)
+    .attr("dy", ".35em")
+    //.attr("transform", "rotate(180)");
 }
 
 
@@ -152,24 +169,20 @@ d3.csv("../datasets/events.csv", function (error, csv_events) {
 });
 
 
-/*
-
-d3.csv("../datasets/WWII_casualties.csv", function (error, csv) {
+d3.csv("../datasets/AllYear.csv", function (error, csv_year) {
     if (error) {
         console.log(error);
 	throw error;
     }
-    csv.forEach(function (d) {
-      d.deathsFinal = +d.DEATHSFINAL;
-      d.civilianRate = +d.CIVILIANRATE;
+    csv_year.forEach(function (d) {
+      d.year = +d.YEAR;
     });
     // Store csv data in a global variable
-    WWII_casualties = csv;
+    allYear = csv_year;
 
 
 });
 
-*/
 
 
 window.onload = () => {
