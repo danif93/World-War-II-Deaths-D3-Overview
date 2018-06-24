@@ -61,7 +61,7 @@
     border-radius: 4px;
     pointer-events: none;
 }
-<<<<<<< HEAD
+
 
 #xAxis path {
     fill: none;
@@ -72,39 +72,3 @@
     font-size: 14px;
 
 }
-
-
-/* in Comparison.html */
-
-.bubblechart{
-  height: 95%;
-  background-color: green;
-}
-
-.stack_cake{
-  height: 95%;
-}
-
-.stackchart{
-  height: 100%;
-  background-color: red;
-}
-
-.cakechart{
-  height: 100%;
-  background-color: blue;
-}
-
-
-/* in Comparison.html */
-.states{
-  height: 100%;
-  background-color: green;
-}
-
-.linechart{
-  height: 100%;
-  background-color: red;
-}
-=======
->>>>>>> 21480d4eccb737827eb76cdc8a1aa246add324bd
