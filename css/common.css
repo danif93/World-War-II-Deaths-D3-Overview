@@ -1,0 +1,19 @@
+body, html {
+  font-family: "Quicksand", sans-serif;
+  font-size: 24px;
+  height: 90%;
+}
+
+.btn-change{
+  width: 130px;
+}
+
+.my_comtainer{
+  padding-top: 30px;
+  height: 100%
+}
+
+.page_container{
+  height: 100%;
+  margin-top: 20px;
+}
