@@ -12,3 +12,8 @@ body, html {
   padding-top: 30px;
   height: 100%
 }
+
+.page_container{
+  height: 100%;
+  margin-top: 20px;
+}
