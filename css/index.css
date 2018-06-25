@@ -1,6 +1,6 @@
 .timeline {
   height: 100%;
-  /*background-color: blue;*/
+  padding-top: 50px;
 }
 
 .map{
@@ -62,7 +62,6 @@
     pointer-events: none;
 }
 
-
 #xAxis path {
     fill: none;
     stroke: black;
@@ -70,5 +69,4 @@
 
 #xAxis text{
     font-size: 14px;
-
 }

@@ -1,7 +1,20 @@
 var allYear;
-var Events;
+var events;
+
+function setYear(){
+  var xScale = d3.scaleBand()
+                .range([50,1350])
+
+  xScale.domain(allYear.map(function(d){
+                                return d.MONTHS
+                              }));
+  return d3.axisBottom(xScale)
+}
+
 
 function drawMap (world, year) {
+
+  d3.select('#map').selectAll("path").remove();
 
   var path = d3.geoPath();
   d3.select("#map").selectAll("path")
@@ -13,48 +26,56 @@ function drawMap (world, year) {
                    .attr('id', function(d){
                      return d.properties.status
                    });
-
-
-  var xScale = d3.scaleBand()
-                 .range([50,1350])
-                 .padding(0.5);
-
-  xScale.domain(allYear.map(function(d){
-                              return d.year
-                            }));
-
-  d3.select("#xAxis")
-    .call(d3.axisBottom(xScale))
-    .attr("transform", "translate(0)")
-    .selectAll("text")
-    .attr("y", 20)
-    .attr("x", 0)
-    .attr("dy", ".35em")
-    //.attr("transform", "rotate(180)");
 }
 
 
 function setimeLine(){
 
-//tutta sta parte deve andare dentro un onClick()
   var list_events_inside = []
   var list_events_outside = []
 
-  Events.forEach(function(ev){
-    if (ev.DATE == year) {
-      if (ev.event_pos[0] != 0){
-        list_events_inside.push(ev)
-      }
-      else {
-        list_events_outside.push(ev)
-      }
-    }
-  })
+  var xScale = d3.scaleBand()
+                 .range([50,1350])
 
-  //loadMap(year)
-  updateMap(list_events_inside)
-  updateOutEvents(list_events_outside)
+  xScale.domain(allYear.map(function(d){
+                                return d.year
+                              }));
 
+  var axis = d3.select("#xAxis");
+  axis.call(d3.axisBottom(xScale))
+      .selectAll("text")
+      .attr("y", 20)
+      .attr("x", 0)
+      .attr("dy", ".35em")
+      .on("click", function(d){
+
+        axis.call(setYear());
+
+        d3.event.stopPropagation();
+
+        axis.selectAll("text")
+            .on("click", function(f){
+              console.log(f);
+              var year = f + "_" + d;
+
+              events.forEach(function(ev){
+
+                if (ev.DATE == year) {
+                  if (ev.event_pos[0] != 0){
+                    list_events_inside.push(ev)
+                  }
+                  else {
+                    list_events_outside.push(ev)
+                  }
+                }
+              })
+
+              loadMap(year)
+              updateMap(list_events_inside)
+              updateOutEvents(list_events_outside)
+              //axis.call(d3.axisBottom(xScale))
+            })
+      })
 }
 
 
@@ -157,7 +178,9 @@ d3.csv("../datasets/events.csv", function (error, csv_events) {
       d.event_pos = [+d.LAT, +d.LON];
     });
 
-    Events = csv_events;
+    events = csv_events;
+
+
 
 });
 
@@ -170,13 +193,12 @@ d3.csv("../datasets/AllYear.csv", function (error, csv_year) {
     csv_year.forEach(function (d) {
       d.year = +d.YEAR;
     });
-    // Store csv data in a global variable
     allYear = csv_year;
 
-
+    setimeLine()
 });
 
 
 window.onload = () => {
-  loadMap("April_1945")
+  loadMap("February_1938")
 }
