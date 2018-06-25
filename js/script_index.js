@@ -1,13 +1,21 @@
 var allYear;
 var events;
 
-function setYear(){
-  var xScale = d3.scaleBand()
-                .range([50,1350])
+function setYear(year){
 
-  xScale.domain(allYear.map(function(d){
-                                return d.MONTHS
-                              }));
+  var list_months = []
+
+  allYear.forEach(function(d){
+                if (d.year == year)
+                  list_months.push(d.MONTHS)
+                })
+
+  var xScale = d3.scaleBand()
+                .domain(list_months.map(function(d){
+                                return d
+                              }))
+                .range([50,1350]);
+
   return d3.axisBottom(xScale)
 }
 
@@ -35,11 +43,10 @@ function setimeLine(){
   var list_events_outside = []
 
   var xScale = d3.scaleBand()
-                 .range([50,1350])
-
-  xScale.domain(allYear.map(function(d){
+                 .domain(allYear.map(function(d){
                                 return d.year
-                              }));
+                              }))
+                 .range([50,1350])
 
   var axis = d3.select("#xAxis");
   axis.call(d3.axisBottom(xScale))
@@ -47,15 +54,15 @@ function setimeLine(){
       .attr("y", 20)
       .attr("x", 0)
       .attr("dy", ".35em")
-      .on("click", function(d){
+      .on("click", function(d) {
 
-        axis.call(setYear());
+        axis.call(setYear(d));
 
         d3.event.stopPropagation();
 
         axis.selectAll("text")
             .on("click", function(f){
-              console.log(f);
+
               var year = f + "_" + d;
 
               events.forEach(function(ev){
@@ -70,16 +77,25 @@ function setimeLine(){
                 }
               })
 
-              loadMap(year)
-              updateMap(list_events_inside)
-              updateOutEvents(list_events_outside)
-              //axis.call(d3.axisBottom(xScale))
+              loadMap(year);
+
+              setTimeout(function () {
+                updateOutEvents(list_events_outside);
+                updateMap(list_events_inside);
+                list_events_inside = []
+                list_events_outside = []
+
+              }, 10);
+              setimeLine()
             })
       })
+
 }
 
 
+
 function clearMap() {
+
     d3.select("#points").selectAll("circle").remove();
 
     d3.select("#map").selectAll(".axis").classed("axis", false)
@@ -149,6 +165,25 @@ function updateMap(list_events) {
 
 function updateOutEvents(list_events) {
 
+  console.log(list_events);
+
+  if (list_events.length > 0) {
+
+    var list = d3.select("#event_outside").html("Events outside Europe")
+    var ul = list.append("ul");
+
+    list_events.forEach(function(ev){
+      ul.append("li")
+        .attr('class', 'events_outside_info')
+        .html(ev.SUMMARY + ".<br> <h5>" + ev.DETAILED_INFORMATION + "</h5>");
+    })
+  }
+  else {
+    d3.selectAll('ul').remove();
+    d3.select("#event_outside").html("")
+  }
+
+
 }
 
 
@@ -157,17 +192,16 @@ function updateOutEvents(list_events) {
 ////////////////////////////  LOAD FILE   //////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-
 function loadMap (year) {
   d3.json("../datasets/TopoJsonFinal/"+year+".json", function (error, world) {
       if (error) {
           console.log(error);
   	      throw error;
       }
+
     drawMap(world, year);
   });
 }
-
 
 d3.csv("../datasets/events.csv", function (error, csv_events) {
     if (error) {
@@ -179,9 +213,6 @@ d3.csv("../datasets/events.csv", function (error, csv_events) {
     });
 
     events = csv_events;
-
-
-
 });
 
 

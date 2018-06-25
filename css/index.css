@@ -4,12 +4,10 @@
 }
 
 .map{
-  /*background-color: green;*/
   height: 100%;
 }
 
 .events{
-  /*background-color: red;*/
   height: 100%;
 }
 
@@ -68,5 +66,15 @@
 }
 
 #xAxis text{
-    font-size: 14px;
+    font-size: 15px;
+}
+
+.events_info{
+  padding: 10px;
+  height: 100%;
+}
+
+.events_outside_info{
+  padding-top: 20px;
+  padding-right: 50px;
 }
