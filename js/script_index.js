@@ -19,6 +19,44 @@ function setYear(year){
   return d3.axisBottom(xScale)
 }
 
+function createLegend (year){
+
+  var g = d3.select('#legend')
+
+  g.selectAll("*").remove();
+  var i = 0;
+
+  var status = [{s:"Axis", c:"#BF360C"},{s:"Axis occupied", c:"#EF5350"}, {s:"Allies", c:"#0277BD"}];
+
+  g.append("text")
+     .attr("x", 0)
+     .attr("y", 20)
+     .attr("font-weight", "bold")
+     .html(year);
+
+  status.forEach(function(d){
+    g.append("rect")
+     .attr("x", 0 )
+     .attr("y", 40 + (i * 25))
+     .attr("width", 15)
+     .attr("height", 15)
+     .style("fill", function(){
+       console.log(d);
+       return d.c
+     });
+
+    g.append("text")
+     .data(status)
+     .attr("x", 25)
+     .attr("y", 47 + (i * 25))
+     .attr("dy", ".35em")
+     .style("text-anchor", "first")
+     .text(function(){
+       return d.s
+     });
+    i ++;
+  })
+}
 
 function drawMap (world, year) {
 
@@ -34,6 +72,7 @@ function drawMap (world, year) {
                    .attr('id', function(d){
                      return d.properties.status
                    });
+
 }
 
 
@@ -54,6 +93,7 @@ function setimeLine(){
       .attr("y", 20)
       .attr("x", 0)
       .attr("dy", ".35em")
+      .attr("cursor", "pointer")
       .on("click", function(d) {
 
         axis.call(setYear(d));
@@ -61,6 +101,7 @@ function setimeLine(){
         d3.event.stopPropagation();
 
         axis.selectAll("text")
+            .attr("cursor", "pointer")
             .on("click", function(f){
 
               var year = f + "_" + d;
@@ -82,6 +123,7 @@ function setimeLine(){
               setTimeout(function () {
                 updateOutEvents(list_events_outside);
                 updateMap(list_events_inside);
+                createLegend(year)
                 list_events_inside = []
                 list_events_outside = []
 
@@ -128,6 +170,7 @@ function updateMap(list_events) {
                        })
             .attr('class', "gold")
             .attr("r", "7px")
+            .attr("cursor", "pointer")
             .on("mouseover", function(d) {
 
                                 var x = d3.event.pageX
@@ -164,8 +207,6 @@ function updateMap(list_events) {
 
 
 function updateOutEvents(list_events) {
-
-  console.log(list_events);
 
   if (list_events.length > 0) {
 
