@@ -143,7 +143,7 @@ function updateMap(list_events) {
                                 tooltip.style("left", (x + 10) + "px")
                                        .style("top", y + "px")
                                        .style('display', "inline")
-                                       .html(ev.SUMMARY + ".<br>" + ev.DETAILED_INFORMATION)
+                                       .html("<h4>"+ ev.SUMMARY + "</h4>" + ev.DETAILED_INFORMATION)
 
                               })
             .on("mouseout", function(d) {
@@ -175,7 +175,7 @@ function updateOutEvents(list_events) {
     list_events.forEach(function(ev){
       ul.append("li")
         .attr('class', 'events_outside_info')
-        .html(ev.SUMMARY + ".<br> <h5>" + ev.DETAILED_INFORMATION + "</h5>");
+        .html(ev.SUMMARY + "<br> <h5>" + ev.DETAILED_INFORMATION + "</h5>");
     })
   }
   else {

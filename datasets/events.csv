@@ -1,6 +1,6 @@
 DATE,SUMMARY,LAT,LON,DETAILED_INFORMATION
 February_1938,German Anschluss with Austria?,410,335,Hitler went ahead with his plans to unify all German-speaking people. He annexed Austria then demanded the liberation of German people in the Sudetenland region of Czechoslovakia. Neville Chamberlain flew to Germany to attempt a settlement before war broke out.
-September_1938,Treaty of Munich,380,335,Hitler Chamberlain Daladier of France and Mussolini of Italy met in Munich and agreed that Hitler should have the Sudetanland of Czechoslovakia. The Czechs were not represented at the meeting and realising that no country would come to their aid were forced to surrender the Sudetenland to Germany. Hitler assured those at the meeting that this was the extent of his ambitions for expansion. Chamberlain returned to England with a piece of paper signed by Hitler proclaiming ‘peace in our time.’?
+September_1938,Treaty of Munich,430,425,Hitler Chamberlain Daladier of France and Mussolini of Italy met in Munich and agreed that Hitler should have the Sudetanland of Czechoslovakia. The Czechs were not represented at the meeting and realising that no country would come to their aid were forced to surrender the Sudetenland to Germany. Hitler assured those at the meeting that this was the extent of his ambitions for expansion. Chamberlain returned to England with a piece of paper signed by Hitler proclaiming ‘peace in our time.’?
 March_1939,Hitler invades Czechoslovakia,400,320,Despite the assurances given by Hitler in the Treaty of Munich (Sept 1938) he marched into Czechoslovakia and occupied the country.
 March_1939,Britain rearms and reassures Poland,290,295,Britain had begun re-arming and a highly secret radar early warning system was installed along the east coast. Conscription was introduced and assurances were given to Poland who was being threatened by the Fuhrer.
 August_1939,Russia and Germany sign pact?,385,295,Hitler and Stalin signed a non-aggression pact which included secret clauses for the division of Poland.
@@ -22,7 +22,7 @@ September_1940,Tripartite Pact,385,295,This pact of mutual alliance was signed b
 December_1940,British rout Italians in N. Africa,,,Italian forces in North Africa were routed by the British led by General Wavell.
 March_1941,Italy and Germany attack Yugoslavia,450,375,German and Italian troops attacked Yugoslavia Greece and the island of Crete. German field Marshall Erwin Rommel led the axis powers back to North Africa.
 June_1941,Hitler attacks Russia – Operation Barbarossa,385,295,Hitler sent 3 million soldiers and 3,500 tanks into Russia. The Russians were taken by surprise as they had signed a treaty with Germany in 1939. Stalin immediately signed a mutual assistance treaty with Britain and launched an Eastern front battle that would claim 20 million casualties. The USA, which had been supplying arms to Britain under a ‘Lend-Lease’ agreement offered similar aid to USSR.
-December_1941,Pearl Harbor,,,The Japanese, who were already waging war against the Chinese, attacked the US pacific fleet at Pearl Harbour Hawaii as a preliminary to taking British French and Dutch colonies in South East Asia.
+December_1941,Pearl Harbor,,,The Japanese who were already waging war against the Chinese attacked the US pacific fleet at Pearl Harbour Hawaii as a preliminary to taking British French and Dutch colonies in South East Asia.
 December_1941,Britain and US declare war on Japan,,,Britain and the United States declared war on Japan.
 February_1942,Japanese take Singapore,,,The Japanese captured Singapore from the British taking some 60,000 prisoners.
 June_1942,Battle of Midway,,,The USA defeated the Japanese navy at the Battle of Midway. Following this victory the US navy was able to push the Japanese back.
@@ -33,21 +33,21 @@ November_1942,Allies push into N. Africa,,,British and American forces under the
 May_1943,Axis surrender N Africa,,,The British and American forces managed to defeat the Axis forces in North Africa
 July_1943,Allies invade Sicily,400,440,British and US forces invaded Sicily.
 August_1943,Allies take Sicily,400,440,The allied troops had won the island of Sicily.
-September_1943,Italy surrenders,380,397,Mussolini had been thrown out of office and the new government of Italy surrendered to the British and the USA. They then agreed to join the allies. The Germans took control of the Italian army freed Mussolini from imprisonment and set him up as head of a puppet government in Northern Italy. This blocked any further allied advance through Italy.
+September_1943,Italy surrenders,410,390,Mussolini had been thrown out of office and the new government of Italy surrendered to the British and the USA. They then agreed to join the allies. The Germans took control of the Italian army freed Mussolini from imprisonment and set him up as head of a puppet government in Northern Italy. This blocked any further allied advance through Italy.
 November_1943,Allies meet at Tehran,,,"Stalin, Roosevelt and Churchill met to co-ordinate plans for a simultaneous squeeze on Germany. They also discussed post war settlements. Churchill mistrusted Stalin Roosevelt anxious to show that the West would not stand against Russia went along with Stalin’s wishes for a second front in France and no diversions further east. Churchill was over-ruled and the fate of post-war Eastern Europe was thus decided."
 January_1944,Leningrad relieved,490,200,The siege of Leningrad was lifted by the Soviet army.
 June_1944,Rome liberated,380,397,Although Italy had surrendered in September it was only now that the allies were able to liberate Rome from the Germans.
 June_1944,D-Day,285,320,The allies launched an attack on Germany’s forces in Normandy, Western France. Thousands of transports carried an invasion army under the supreme command of general Eisenhower to the Normandy beaches. The Germans who had been fed false information about a landing near Calais rushed troops to the area but were unable to prevent the allies from forming a solid bridgehead. For the allies it was essential to first capture a port.
 July_1944,Japanese evicted from Burma,,,British forces under General Slim with help from guerrilla-fighting Chindits led by Orde Wingate evicted the Japanese from Burma.
 August_1944,Paris liberated,305,325,The French capital of Paris was liberated from the Germans.
-September_1944,V2 Flying Bombs,290,295,The first V2 flying bombs killed three people in London.
+September_1944,V2 Flying Bombs,330,275,The first V2 flying bombs killed three people in London.
 December_1944,Battle of the Bulge,330,290,Germany launched its final defensive through the Ardennes region of Belgium. However they were beaten back by the allies.
 March_1945,Allies cross the Rhine,360,310,The Allies crossed the Rhine while Soviet forces were approaching Berlin from the East.
 April_1945,Death of Roosevelt,,,President Roosevelt died. He was succeeded by President Truman.
 April_1945,Russians reach Berlin,400,300,The Russians reached Berlin shortly before the US forces.
 April_1945,Mussolini captured and executed,380,397,Italian partisans captured Mussolini and executed him.
 April_1945,Hitler commits suicide,385,295,The German leader Adolf Hitler committed suicide in his bombproof shelter together with his mistress, Eva Braun, who he had, at the last minute, made his wife.
-May_1945,German forces surrender,380,397,German forces in Italy surrendered to the Allies.
+May_1945,German forces surrender,415,390,German forces in Italy surrendered to the Allies.
 May_1945,German forces surrender,380,260,German forces in north west Germany Holland and Denmark surrendered to Montgomery on Luneburg Heath. Admiral Donitz whom Hitler had nominated as his successor tried to reach agreement to surrender to the Western allies but to continue to fight the Russians. His request was refused.
 May_1945,German forces surrender,370,210,German forces in north west Germany Holland and Denmark surrendered to Montgomery on Luneburg Heath. Admiral Donitz whom Hitler had nominated as his successor tried to reach agreement to surrender to the Western allies but to continue to fight the Russians. His request was refused.
 May_1945,Donitz offers unconditional surrender,385,295,Hitler’s successor Admiral Donitz, offerred an unconditional surrender to the allies.
