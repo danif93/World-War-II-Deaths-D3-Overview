@@ -41,7 +41,6 @@ function createLegend (year){
      .attr("width", 15)
      .attr("height", 15)
      .style("fill", function(){
-       console.log(d);
        return d.c
      });
 

@@ -5,13 +5,15 @@
 	<meta charset="utf-8">
 	<title>Final Project Data Visualization</title>
 
-	<link rel="stylesheet" type="text/css" href="css/comparison.css">
 	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<link rel="stylesheet" type="text/css" href="css/comparison.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
 	<script type="text/javascript" src="js/d3/d3.js"></script>
 	<script type="text/javascript" src="js/d3/d3-selection-multi.js"></script>
-	<script type="text/javascript" src="js/d3/topojson.js"></script>
+	<script src="https://d3js.org/d3-color.v1.min.js"></script>
+<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
 	<script type="text/javascript" src="js/script_comparison.js"></script>
 
@@ -34,15 +36,18 @@
 
     <div class="page_container">
 
-      <div class="row" style="height:98%">
+      <div class="row" style="height:100%">
 
-        <div class="states col-sm-12 col-md-3">
+        <svg id="countries" class="countries col-sm-12 col-md-3">
+					<g id="rect"></g>
+					<g id="country"></g>
+        </svg>
 
-        </div>
-
-        <div class="linechart col-sm-12 col-md-9">
-
-        </div>
+        <svg id ="linechart" class="linechart col-sm-12 col-md-9">
+	        <g id="xAxis"></g>
+	        <g id="yAxis"></g>
+	        <g id="lines"></g>
+        </svg>
 
       </div>
     </div>
