@@ -7,49 +7,51 @@ function selectCountry () {
   }).keys()
 }
 
-function randomArray(){
+
+function setCountries () {
+
   array = []
   for (var i = 0; i<31; i++)
     array.push(i)
 
-  return array.sort(function(a, b){return 0.5 - Math.random()});
-
-
-}
-
-function setCountries () {
+  array.sort(function(a, b){return 0.5 - Math.random()});
 
   var countries = d3.select("#countries")
-  var svgBounds = countries.node().getBoundingClientRect();
 
   var setColor = d3.scaleSequential(d3.interpolateRainbow)
                    .domain([0,30])
 
-  var rect = d3.select("#rect");
+  var newgr = countries.selectAll("g")
+                        .data(selectCountry())
+                        .enter()
+                        .append("g")
 
-  var newgr = rect.selectAll("g")
-                  .data(selectCountry())
-                  .enter()
-                  .append("g")
 
   newgr.append("rect")
-      .attr("width", "22px")
-      .attr("height", "22px")
-      .attr("fill", function(d, i) {
-                      return setColor(i);
+       .attr("width", "18px")
+       .attr("height", "18px")
+       .attr("fill", function(d, i) {
+                       return setColor(array[i]);
                     })
+       .attr("opacity", 0.3)
+       .attr("id", function(d , i){
+         return "r" + i
+       })
 
 
   newgr.append("text")
       .attr("x", 30)
-      .attr("dy", "1.20em")
+      .attr("dy", "1.10em")
       .style("text-anchor", "first")
       .text(function(d){
                 return d
             })
       .attr("cursor", "pointer")
+      .on("click", function(d, i){
+        d3.select("#r"+i).classed("selected", !d3.select("#r"+i).classed("selected"))
+      })
 
-  rect.selectAll("g").data(selectCountry()).attr("transform", (d,i) => {return 'translate(0,'+ i*27+ ')'})
+  countries.selectAll("g").data(selectCountry()).attr("transform", (d,i) => {return 'translate(0,'+ i*19.5+ ')'})
 }
 
 ////////////////////////////////////////////////////////////////////////////////

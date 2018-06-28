@@ -19,42 +19,41 @@ function setYear(year){
   return d3.axisBottom(xScale)
 }
 
-function createLegend (year){
+
+
+function createLegend (){
 
   var g = d3.select('#legend')
 
-  g.selectAll("*").remove();
-  var i = 0;
+  var status = [{s:"Axis", c:"#BF360C"},{s:"Axis occupied", c:"#EF5350"}, {s:"Allies", c:"#0277BD"}, {s:"Neutral", c:"#d9d9d9"}];
 
-  var status = [{s:"Axis", c:"#BF360C"},{s:"Axis occupied", c:"#EF5350"}, {s:"Allies", c:"#0277BD"}];
+  var newgr = g.selectAll("g")
+               .data(status)
+               .enter()
+               .append("g")
 
-  g.append("text")
-     .attr("x", 0)
-     .attr("y", 20)
-     .attr("font-weight", "bold")
-     .html(year);
+  newgr.append("rect")
+       .attr("x", 12 )
+       .attr("y", function(d,i) {
+                    return 40 + (i * 25)
+                  })
+       .attr("width", 15)
+       .attr("height", 15)
+       .style("fill", function(d){
+                        return d.c
+                      });
 
-  status.forEach(function(d){
-    g.append("rect")
-     .attr("x", 0 )
-     .attr("y", 40 + (i * 25))
-     .attr("width", 15)
-     .attr("height", 15)
-     .style("fill", function(){
-       return d.c
-     });
+  newgr.append("text")
+       .attr("x", 37)
+       .attr("y", function(d,i) {
+                    return 47 + (i * 25)
+                  })
+       .attr("dy", ".35em")
+       .style("text-anchor", "first")
+       .text(function(d){
+                return d.s
+              });
 
-    g.append("text")
-     .data(status)
-     .attr("x", 25)
-     .attr("y", 47 + (i * 25))
-     .attr("dy", ".35em")
-     .style("text-anchor", "first")
-     .text(function(){
-       return d.s
-     });
-    i ++;
-  })
 }
 
 function drawMap (world, year) {
@@ -77,6 +76,7 @@ function drawMap (world, year) {
 
 function setimeLine(){
 
+  var pad = 50;
   var list_events_inside = []
   var list_events_outside = []
 
@@ -84,9 +84,10 @@ function setimeLine(){
                  .domain(allYear.map(function(d){
                                 return d.year
                               }))
-                 .range([50,1350])
+                 .range([pad, d3.select("#timeline").node().getBoundingClientRect().width - 1])
 
   var axis = d3.select("#xAxis");
+
   axis.call(d3.axisBottom(xScale))
       .selectAll("text")
       .attr("y", 20)
@@ -120,13 +121,13 @@ function setimeLine(){
               loadMap(year);
 
               setTimeout(function () {
-                updateOutEvents(list_events_outside);
+                updateOutEvents(list_events_outside,d);
                 updateMap(list_events_inside);
-                createLegend(year)
                 list_events_inside = []
                 list_events_outside = []
 
               }, 10);
+
               setimeLine()
             })
       })
@@ -185,7 +186,7 @@ function updateMap(list_events) {
                                 tooltip.style("left", (x + 10) + "px")
                                        .style("top", y + "px")
                                        .style('display', "inline")
-                                       .html("<h4>"+ ev.SUMMARY + "</h4>" + ev.DETAILED_INFORMATION)
+                                       .html("<h4><i>"+ ev.SUMMARY + "</i></h4>" + ev.DETAILED_INFORMATION)
 
                               })
             .on("mouseout", function(d) {
@@ -205,23 +206,22 @@ function updateMap(list_events) {
 }
 
 
-function updateOutEvents(list_events) {
+function updateOutEvents(list_events, year) {
+
+  d3.selectAll('ul').remove();
+  var title = d3.select("#event_outside")
 
   if (list_events.length > 0) {
 
-    var list = d3.select("#event_outside").html("Events outside Europe")
-    var ul = list.append("ul");
+    var ul = title.append("ul");
 
     list_events.forEach(function(ev){
       ul.append("li")
         .attr('class', 'events_outside_info')
-        .html(ev.SUMMARY + "<br> <h5>" + ev.DETAILED_INFORMATION + "</h5>");
+        .html("<h4><i>"+ev.SUMMARY+"</i></h4><p>"+ev.DETAILED_INFORMATION+"</p>");
     })
   }
-  else {
-    d3.selectAll('ul').remove();
-    d3.select("#event_outside").html("")
-  }
+
 
 
 }
@@ -240,6 +240,8 @@ function loadMap (year) {
       }
 
     drawMap(world, year);
+    var res = year.split("_")
+    d3.select("#title").html("<h2>"+res[1]+", "+res[0]+"</h2>")
   });
 }
 
@@ -272,4 +274,5 @@ d3.csv("../datasets/AllYear.csv", function (error, csv_year) {
 
 window.onload = () => {
   loadMap("February_1938")
+  createLegend()
 }

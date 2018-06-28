@@ -1,7 +1,7 @@
 .countries{
   height: 100%;
   padding-top: 10px;
-  overflow: scroll;
+
   /*background-color: green;*/
 }
 
@@ -9,4 +9,9 @@
 
   height: 100%;
   background-color: red;
+
+}
+
+.selected{
+  opacity: 1;
 }

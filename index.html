@@ -18,49 +18,47 @@
 
 <body>
 
-	<header class="container-fluid">
+	<header>
 	    <h1>Final Project Data Visualization</h1>
 	    <div>Name: Danilo Franco, Gianluca Gambari</div>
 	    <div>E-Mail: franco.danilo1993@gmail.com, gianluca.gambari@outlook.it</div>
 	</header>
 
-	<div class="container-fluid my_comtainer">
+	<div class="buttons">
 		<a role="button" class="btn btn-default btn-change" href="index.html"> Map </a>
 		<a role="button" class="btn btn-default btn-change" href="casualties.html"> Casualties </a>
 		<a role="button" class="btn btn-default btn-change" href="comparison.html"> Comparison </a>
-
+	</div>
 
 		<div class="page_container">
+			<div id='title' class="title"></div>
 
-		  <div class="row" style="height:80%">
-		    <svg class="map col-sm-12 col-md-8">
-					<g id="legend"></g>
+		  <div class="row map_events">
+
+				<svg class="map col-sm-12 col-md-8">
+					<g id="legend" class="legend"></g>
 		      <g id="map"></g>
 					<g id="points"></g>
-
 		    </svg>
+
 				<div id="my_tooltip" class="tooltip"></div>
 
 		    <div class="events col-sm-12 col-md-4">
 		       <div class="events_info">
-							<h3 id ="event_outside"></h3>
-							<span id="events_outside_info" ></span>
+							<h3 id ="event_outside">Events outside Europe</h3>
+							<span id="events_outside_info"></span>
 					 </div>
 		    </div>
+
 		  </div>
 
-		  <div class="row" style="height:20%">
-		    <div class="col-sm-12 col-md-12">
-					<svg class="timeline" width="100%" height="50px">
+		  <div class="row col-sm-12 col-md-12 timeL">
+					<svg id="timeline" class="timeline" width="100%">
 			        <g id="xAxis"></g>
 					</svg>
-				</div>
 	  	</div>
 
 		</div>
-
-	</div>
-
 
 
 <script type="text/javascript" src="js/script_index.js"></script>

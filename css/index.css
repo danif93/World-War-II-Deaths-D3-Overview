@@ -9,8 +9,8 @@
 
 .events{
   height: 100%;
+  border-left: solid lightgray 1px;
 }
-
 
 /* countries */
 
@@ -54,7 +54,6 @@
     background: rgba(0, 0, 0, 0.8);
     color: #fff;
     width: 360px;
-    font-weight: bold;
     font: 10px sans-serif;
     border-radius: 4px;
     pointer-events: none;
@@ -70,7 +69,6 @@
 }
 
 .events_info{
-  padding: 10px;
   height: 100%;
 }
 
@@ -79,6 +77,21 @@
   padding-right: 50px;
 }
 
-#legend {
-  color:red
+.map_events{
+  height:78%;
+}
+
+.timeL{
+  height:18%
+}
+
+.title{
+  height:6%;
+  text-align: center;
+}
+
+
+li p {
+  font-size: 15px;
+  font-weight: normal;
 }
