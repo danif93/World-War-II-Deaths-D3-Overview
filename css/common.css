@@ -1,19 +1,25 @@
 body, html {
   font-family: "Quicksand", sans-serif;
   font-size: 24px;
-  height: 90%;
+  height: 100%;
 }
-
+header{
+  height: 15%
+}
 .btn-change{
   width: 130px;
 }
 
-.my_comtainer{
+.buttons{
   padding-top: 30px;
-  height: 100%
+  height: 5%
 }
 
 .page_container{
-  height: 100%;
+  height: 80%;
   margin-top: 20px;
+}
+
+.fluid-container{
+  height: 100% !important
 }

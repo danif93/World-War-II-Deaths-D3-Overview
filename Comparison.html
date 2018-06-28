@@ -20,26 +20,29 @@
 </head>
 
 <body>
+	<div class="container-fluid">
 
-	<header class="container-fluid">
-			<h1>Final Project Data Visualization</h1>
-			<div>Name: Danilo Franco, Gianluca Gambari</div>
-			<div>E-Mail: franco.danilo1993@gmail.com, gianluca.gambari@outlook.it</div>
-	</header>
+		<header>
+				<h1>Final Project Data Visualization</h1>
+				<div>Name: Danilo Franco, Gianluca Gambari</div>
+				<div>E-Mail: franco.danilo1993@gmail.com, gianluca.gambari@outlook.it</div>
+		</header>
 
-	<div class="container-fluid my_comtainer">
-		<a role="button" class="btn btn-default btn-change" href="index.html"> Map </a>
-		<a role="button" class="btn btn-default btn-change" href="casualties.html"> Casualties </a>
-		<a role="button" class="btn btn-default btn-change" href="comparison.html"> Comparison </a>
+		<div class="buttons">
+
+			<a role="button" class="btn btn-default btn-change" href="index.html"> Map </a>
+			<a role="button" class="btn btn-default btn-change" href="casualties.html"> Casualties </a>
+			<a role="button" class="btn btn-default btn-change" href="comparison.html"> Comparison </a>
+
+		</div>
 
 
 
-    <div class="page_container">
+    <div class="page_container ">
 
-      <div class="row" style="height:100%">
 
         <svg id="countries" class="countries col-sm-12 col-md-3">
-					<g id="rect"></g>
+					<g id="rect" class="rect"></g>
         </svg>
 
         <svg id ="linechart" class="linechart col-sm-12 col-md-9">
@@ -48,8 +51,9 @@
 	        <g id="lines"></g>
         </svg>
 
-      </div>
     </div>
+		
+	</div>
 
 </body>
 </html>
