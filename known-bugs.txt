@@ -1,0 +1,1 @@
+1. (map) dot radius initialization is bigger than the on mouseout one;
