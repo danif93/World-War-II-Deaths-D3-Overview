@@ -215,7 +215,7 @@ function addLine(state, color){
   stateDeaths[state] = avgDeaths_list
 
   if (maxDeathValue > currentMaxDeaths) {
-    
+
      currentMaxDeaths = maxDeathValue
 
     yScale = d3.scaleLinear()
@@ -232,7 +232,7 @@ function addLine(state, color){
 
 
   }
-
+ 
 
 
 
