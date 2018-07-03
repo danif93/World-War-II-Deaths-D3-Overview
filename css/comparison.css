@@ -8,10 +8,16 @@
 .linechart{
 
   height: 100%;
-  background-color: red;
+  padding-top: 10px;
+  /*background-color: red;*/
 
 }
 
 .selected{
   opacity: 1;
+}
+
+.lines {
+  fill: none;
+  stroke-width: 1.5px;
 }

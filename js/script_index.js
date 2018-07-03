@@ -2,7 +2,7 @@ var allYear;
 var events;
 
 function setYear(year){
-
+  var pad = 50;
   var list_months = []
 
   allYear.forEach(function(d){
@@ -14,7 +14,7 @@ function setYear(year){
                 .domain(list_months.map(function(d){
                                 return d
                               }))
-                .range([50,1350]);
+                .range([pad, d3.select("#timeline").node().getBoundingClientRect().width - 1]);
 
   return d3.axisBottom(xScale)
 }
@@ -126,7 +126,7 @@ function setimeLine(){
                 list_events_inside = []
                 list_events_outside = []
 
-              }, 10);
+              }, 20);
 
               setimeLine()
             })

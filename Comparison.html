@@ -11,11 +11,13 @@
 
 	<script type="text/javascript" src="js/d3/d3.js"></script>
 	<script type="text/javascript" src="js/d3/d3-selection-multi.js"></script>
-	<script src="https://d3js.org/d3-color.v1.min.js"></script>
-<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
-<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
-	<script type="text/javascript" src="js/script_comparison.js"></script>
+	<script src="https://d3js.org/d3-color.v1.min.js"></script>
+	<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+	<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+	<script src="https://d3js.org/d3-time.v1.min.js"></script>
+	<script src="https://d3js.org/d3-time-format.v2.min.js"></script>
 
 </head>
 
@@ -37,7 +39,6 @@
 		</div>
 
 
-
     <div class="page_container ">
 
 				<svg id="countries" class="countries col-sm-12 col-md-2">
@@ -46,7 +47,7 @@
         <svg id ="linechart" class="linechart col-sm-12 col-md-10">
 	        <g id="xAxis"></g>
 	        <g id="yAxis"></g>
-	        <g id="lines"></g>
+	        <g id="lines" class="lines"></g>
         </svg>
 
     </div>
@@ -55,3 +56,5 @@
 
 </body>
 </html>
+
+<script type="text/javascript" src="js/script_comparison.js"></script>
