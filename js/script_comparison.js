@@ -1,5 +1,4 @@
 var WWII_casualties
-var warMonths
 var months = {"1":"Jan", "2":"Feb", "3":"Mar", "4":"Apr", "5":"May", "6":"Jun",
               "7":"Jul", "8":"Aug", "9":"Sep", "10":"Oct", "11":"Nov", "12":"Dec"};
 var svgBounds = d3.select("#linechart").node().getBoundingClientRect()
@@ -10,7 +9,7 @@ var xScale
 var yScale = d3.scaleLinear()
             .range([svgBounds.height -ypad, 0])
             .domain([0, 100000]);
-var list_of_months = []
+var months_list = []
 var LineGenerator = d3.line()
                       .x(function(d) { return xScale(d.month) })
                       .y(function(d) { return yScale(d.deaths); })
@@ -47,12 +46,12 @@ window.onload = () => {
 
       warMonths.forEach(function(d){
                         if (d.YEAR >= 1939)
-                          list_of_months.push(d.MONTHS.substring(0,3)+" "+d.YEAR.substring(2,4));
+                          months_list.push(d.MONTHS.substring(0,3)+" "+d.YEAR.substring(2,4));
                       })
 
       xScale = d3.scaleBand()
                   .range([xpad, svgBounds.width - 20])
-                  .domain(list_of_months)
+                  .domain(months_list)
 
       setCountries();
       createLineChart();
@@ -61,9 +60,7 @@ window.onload = () => {
 ////////////////////////////  END LOAD & INITIALISATION  ////////////////////////////
 
 function distinctCountries() {
-  return d3.map(WWII_casualties, function(d){
-    return d.COUNTRY;
-  }).keys()
+  return d3.map(WWII_casualties, function(d){ return d.COUNTRY; }).keys()
 }
 
 function setCountries () {
@@ -84,7 +81,7 @@ function setCountries () {
        .attr("width", "18px")
        .attr("height", "18px")
        .attr("fill", function(d, i) { return colorScale(array[i]); })
-       .attr("opacity", 0.3)
+       .attr("opacity", 0.2)
        .attr("id", function(d, i){ return "r"+i })
 
   newGr.append("text")
@@ -107,7 +104,7 @@ function getStateDeaths(state) {
 
   var index = 0
 
-  list_of_months.forEach(function(m) { avgDeath_list.push({"month":m, "deaths":0}) })
+  months_list.forEach(function(m) { avgDeath_list.push({"month":m, "deaths":0}) })
 
   WWII_casualties.forEach(function(d) {
     if (d.COUNTRY == state && d.TAGS != "holocaust-jewish" /*&& d.TAGS != "air-firebomb"*/) {
@@ -157,7 +154,7 @@ function createLineChart(){
                         .attr("transform", "translate(-5,"+(svgBounds.height-ypad)+")")
                         .transition()
                         .duration(1000)
-                        .call(d3.axisBottom(xScale).ticks(list_of_months.length))
+                        .call(d3.axisBottom(xScale).ticks(months_list.length))
                         .selectAll("text")
                         .attr("y", 0)
                         .attr("x", 10)
@@ -171,18 +168,16 @@ function createLineChart(){
                         .call(d3.axisLeft(yScale).ticks(30, "s"));
 
   d3.select("#linechart").select("#grid").selectAll("line")
-    .data(list_of_months)
+    .data(months_list)
     .enter()
     .append("line")
     .attr("x1", function(d) { return xScale(d); })
     .attr("x2", function(d) { return xScale(d); })
     .attr("y1", 0)
     .attr("y2", svgBounds.height-ypad)
-
 }
 
 function addLine(state, colorIdx){
-
   [avgDeaths_list, maxDeathValue] = getStateDeaths(state)
 
   if (maxDeathValue > currentMaxDeaths) {

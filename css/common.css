@@ -4,8 +4,8 @@
 
 body, html {
   font-family: "Quicksand", sans-serif;
-  height: 97%;
-  width: 98%
+  height: 98%;
+  width: 100%
 }
 
 header{
@@ -13,15 +13,10 @@ header{
   padding-left: 12px
 }
 
-.btn-change{
-  width: 10%;
-  margin-left: 22px;
-}
-
-.buttons{
+.btn-group{
   height: 5%;
-  text-align: center;
-  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .page_container{

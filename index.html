@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="utf-8">
 	<title>Final Project Data Visualization</title>
@@ -24,44 +23,38 @@
 	    <div>E-Mail: franco.danilo1993@gmail.com, gianluca.gambari@outlook.it</div>
 	</header>
 
-	<div class="buttons">
-		<a role="button" class="btn btn-default btn-change" href="index.html"> Map </a>
-		<a role="button" class="btn btn-default btn-change" href="casualties.html"> Casualties </a>
-		<a role="button" class="btn btn-default btn-change" href="comparison.html"> Comparison </a>
+	<div class="btn-group btn-group-justified">
+		<a role="button" class="btn btn-info" href="index.html"> Map </a>
+		<a role="button" class="btn btn-default" href="casualties.html"> Casualties </a>
+		<a role="button" class="btn btn-default" href="comparison.html"> Comparison </a>
 	</div>
 
-		<div class="page_container">
-			<div id='title' class="title"></div>
+	<div class="page_container">
+		<div id="title" class="title"></div>
 
-		  <div class="row map_events">
+	  <div class="row map_events">
+			<svg class="map col-sm-12 col-md-8">
+				<g id="legend" class="legend"></g>
+	      <g id="map"></g>
+				<g id="points"></g>
+	    </svg>
 
-				<svg class="map col-sm-12 col-md-8">
-					<g id="legend" class="legend"></g>
-		      <g id="map"></g>
-					<g id="points"></g>
-		    </svg>
+			<div id="my_tooltip" class="tooltip"></div>
 
-				<div id="my_tooltip" class="tooltip"></div>
+	    <div class="events col-sm-12 col-md-4">
+       <div class="events_info">
+				<h3 id ="event_outside">Events outside Europe</h3>
+				<span id="events_outside_info"></span>
+			 </div>
+	    </div>
+	  </div>
 
-		    <div class="events col-sm-12 col-md-4">
-		       <div class="events_info">
-							<h3 id ="event_outside">Events outside Europe</h3>
-							<span id="events_outside_info"></span>
-					 </div>
-		    </div>
-
-		  </div>
-
-		  <div class="row col-sm-12 col-md-12 timeL">
-					<svg id="timeline" class="timeline" width="100%">
-			        <g id="xAxis"></g>
-					</svg>
-	  	</div>
-
-		</div>
-
-
-<script type="text/javascript" src="js/script_index.js"></script>
+	  <div class="row col-sm-12 col-md-12 timeLine-container">
+			<svg id="timeline" class="timeline" width="100%"></svg>
+  	</div>
+	</div>
 
 </body>
 </html>
+
+<script type="text/javascript" src="js/script_index.js"></script>

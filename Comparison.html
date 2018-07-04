@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="utf-8">
 	<title>Final Project Data Visualization</title>
@@ -18,42 +17,31 @@
 
 	<script src="https://d3js.org/d3-time.v1.min.js"></script>
 	<script src="https://d3js.org/d3-time-format.v2.min.js"></script>
-
 </head>
 
 <body>
 
+	<header>
+			<h1>Final Project Data Visualization</h1>
+			<div>Name: Danilo Franco, Gianluca Gambari</div>
+			<div>E-Mail: franco.danilo1993@gmail.com, gianluca.gambari@outlook.it</div>
+	</header>
 
-		<header>
-				<h1>Final Project Data Visualization</h1>
-				<div>Name: Danilo Franco, Gianluca Gambari</div>
-				<div>E-Mail: franco.danilo1993@gmail.com, gianluca.gambari@outlook.it</div>
-		</header>
+	<div class="btn-group btn-group-justified">
+		<a role="button" class="btn btn-default" href="index.html"> Map </a>
+		<a role="button" class="btn btn-default" href="casualties.html"> Casualties </a>
+		<a role="button" class="btn btn-info" href="comparison.html"> Comparison </a>
+	</div>
 
-		<div class="buttons">
-
-			<a role="button" class="btn btn-default btn-change" href="index.html"> Map </a>
-			<a role="button" class="btn btn-default btn-change" href="casualties.html"> Casualties </a>
-			<a role="button" class="btn btn-default btn-change" href="comparison.html"> Comparison </a>
-
-		</div>
-
-
-    <div class="page_container ">
-
-				<svg id="countries" class="countries col-sm-12 col-md-2">
-        </svg>
-
-        <svg id ="linechart" class="linechart col-sm-12 col-md-10">
-	        <g id="xAxis"></g>
-	        <g id="yAxis"></g>
-	        <g id="lines" class="lines"></g>
-					<g id="grid" class="grid"></g>
-        </svg>
-
-    </div>
-
-
+  <div class="page_container ">
+			<svg id="countries" class="countries col-sm-12 col-md-2"></svg>
+      <svg id ="linechart" class="linechart col-sm-12 col-md-10">
+        <g id="xAxis"></g>
+        <g id="yAxis"></g>
+        <g id="lines" class="lines"></g>
+				<g id="grid" class="grid"></g>
+      </svg>
+  </div>
 
 </body>
 </html>

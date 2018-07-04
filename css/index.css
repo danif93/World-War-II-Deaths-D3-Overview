@@ -1,41 +1,31 @@
-.timeline {
-  height: 100%;
-  padding-top: 50px;
+.title{
+  height:6%;
+  text-align: center;
 }
 
 .map{
   height: 100%;
 }
 
-.events{
-  height: 100%;
-  border-left: solid lightgray 1px;
-}
-
 /* countries */
-
 .countries {
     stroke: #f7f7f7;
     fill: #d9d9d9;
 }
 
 .axis {
-  stroke: #f7f7f7;
   fill: #BF360C;
 }
 
 .axis_occupied{
-  stroke: #f7f7f7;
   fill: #EF5350;
 }
 
 .allies{
-  stroke: #f7f7f7;
   fill: #0277BD;
 }
 
 .neutral{
-  stroke: #f7f7f7;
   fill: #d9d9d9;
 }
 
@@ -59,13 +49,9 @@
     pointer-events: none;
 }
 
-#xAxis path {
-    fill: none;
-    stroke: black;
-}
-
-#xAxis text{
-    font-size: 15px;
+.events{
+  height: 100%;
+  border-left: solid lightgray 1px;
 }
 
 .events_info{
@@ -77,21 +63,31 @@
   padding-right: 50px;
 }
 
+li p {
+  font-size: 15px;
+  font-weight: normal;
+}
+
 .map_events{
   height:78%;
 }
 
-.timeL{
+/* TIMELINE */
+.timeLine-container{
   height:18%
 }
 
-.title{
-  height:6%;
-  text-align: center;
+.timeline {
+  height: 100%;
+  padding-top: 50px;
 }
 
+.timeline path {
+    fill: none;
+    stroke: black;
+}
 
-li p {
-  font-size: 15px;
-  font-weight: normal;
+.timeline text{
+    font-size: 15px;
+    cursor: pointer;
 }
