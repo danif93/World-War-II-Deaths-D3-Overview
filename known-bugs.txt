@@ -1,1 +1,2 @@
 1. (map) dot radius initialization is bigger than the on mouseout one;
+2. (comparisons) adjust legend size (goes out of the svg in danilo's screen);
