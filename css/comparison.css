@@ -1,16 +1,11 @@
 .countries{
   height: 100%;
   padding-top: 10px;
-
-  /*background-color: green;*/
 }
 
 .linechart{
-
   height: 100%;
   padding-top: 10px;
-  /*background-color: red;*/
-
 }
 
 .selected{
@@ -20,4 +15,14 @@
 .lines {
   fill: none;
   stroke-width: 1.5px;
+}
+
+svg .grid line {
+  stroke: lightgray;
+  stroke-width: 0.7px;
+  stroke-dasharray: 4px, 2px;
+}
+
+svg #xAxis {
+  text-anchor: start;
 }
