@@ -1,11 +1,11 @@
-var allYear;
+var warMonths;
 var events;
 
 function setYear(year){
   var pad = 50;
   var list_months = []
 
-  allYear.forEach(function(d){
+  warMonths.forEach(function(d){
                 if (d.year == year)
                   list_months.push(d.MONTHS)
                 })
@@ -81,14 +81,14 @@ function setimeLine(){
   var list_events_outside = []
 
   var xScale = d3.scaleBand()
-                 .domain(allYear.map(function(d){
+                 .domain(warMonths.map(function(d){
                                 return d.year
                               }))
                  .range([pad, d3.select("#timeline").node().getBoundingClientRect().width - 1])
 
-  var axis = d3.select("#xAxis");
+  var timeline = d3.select("#timeline");
 
-  axis.call(d3.axisBottom(xScale))
+  timeline.call(d3.axisBottom(xScale))
       .selectAll("text")
       .attr("y", 20)
       .attr("x", 0)
@@ -96,11 +96,11 @@ function setimeLine(){
       .attr("cursor", "pointer")
       .on("click", function(d) {
 
-        axis.call(setYear(d));
+        timeline.call(setYear(d));
 
         d3.event.stopPropagation();
 
-        axis.selectAll("text")
+        timeline.selectAll("text")
             .attr("cursor", "pointer")
             .on("click", function(f){
 
@@ -258,7 +258,7 @@ d3.csv("../datasets/events.csv", function (error, csv_events) {
 });
 
 
-d3.csv("../datasets/AllYear.csv", function (error, csv_year) {
+d3.csv("../datasets/warMonths.csv", function (error, csv_year) {
     if (error) {
         console.log(error);
 	throw error;
@@ -266,7 +266,7 @@ d3.csv("../datasets/AllYear.csv", function (error, csv_year) {
     csv_year.forEach(function (d) {
       d.year = +d.YEAR;
     });
-    allYear = csv_year;
+    warMonths = csv_year;
 
     setimeLine()
 });
