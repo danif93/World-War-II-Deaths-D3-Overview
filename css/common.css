@@ -1,11 +1,9 @@
 * {
-  box-sizing: border-box;
 }
 
 body, html {
   font-family: "Quicksand", sans-serif;
   height: 100%;
-  width: 100%;
 }
 
 header{
@@ -24,5 +22,4 @@ header{
 .page_container{
   height: 80%;
   width: 100%;
-  /*padding-top: 20px;*/
 }
