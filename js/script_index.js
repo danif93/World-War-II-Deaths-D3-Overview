@@ -61,7 +61,7 @@ function setYearMonths(year){
 
   xScale = d3.scaleBand()
                 .domain(list_months.map(function(d) { return d; }))
-                .range([pad, d3.select("#timeline").node().getBoundingClientRect().width-1]);
+                .range([pad, d3.select("#timeline").node().getBoundingClientRect().width-pad]);
 
   return d3.axisBottom(xScale)
 }
@@ -113,7 +113,7 @@ function setTimeLine(){
 
   xScale = d3.scaleBand()
               .domain(warMonths.map(function(d) { return d.year; }))
-              .range([pad, d3.select("#timeline").node().getBoundingClientRect().width-1])
+              .range([pad, d3.select("#timeline").node().getBoundingClientRect().width-pad])
 
   var timeline = d3.select("#timeline");
 

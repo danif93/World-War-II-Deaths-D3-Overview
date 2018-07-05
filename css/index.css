@@ -1,15 +1,14 @@
 .title{
-  height: 6%;
+  height: 10%;
   text-align: center;
 }
 
 .mapEvents-container{
-  height:78%;
-  padding-top: 10px;
+  height: 75%;
 }
 
 .timeLine-container{
-  height:15%
+  height: 15%;
 }
 
 /**************** MAP ****************/
@@ -29,7 +28,7 @@
 .Allies{
   fill: #0277BD;
 }
-.Neutral{
+.Neutral, .Other{
   fill: #d9d9d9;
 }
 
@@ -52,7 +51,6 @@
   border-radius: 4px;
   pointer-events: none;
   display: inline;
-
 }
 
 /**************** OUTER EVENTS ****************/
@@ -78,14 +76,16 @@ li p {
 .timeline {
   height: 100%;
   padding-top: 50px;
+  border: solid lightgray 1px;
 }
 
 .timeline path {
-    fill: none;
-    stroke: black;
+  fill: none;
+  stroke: black;
 }
 
 .timeline text{
-    font-size: 15px;
-    cursor: pointer;
+  stroke: black;
+  font-size: 15px;
+  cursor: pointer;
 }

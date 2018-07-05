@@ -3,11 +3,11 @@ var months = {"1":"Jan", "2":"Feb", "3":"Mar", "4":"Apr", "5":"May", "6":"Jun",
               "7":"Jul", "8":"Aug", "9":"Sep", "10":"Oct", "11":"Nov", "12":"Dec"};
 var svgBounds = d3.select("#linechart").node().getBoundingClientRect()
 var xpad = 30
-var ypad = 55
+var ypad = 60
 var colorScale
 var xScale
 var yScale = d3.scaleLinear()
-            .range([svgBounds.height -ypad, 0])
+            .range([svgBounds.height-ypad, ypad-20])
             .domain([0, 100000]);
 var months_list = []
 var LineGenerator = d3.line()
@@ -50,10 +50,10 @@ window.onload = () => {
                       })
 
       xScale = d3.scaleBand()
-                  .range([xpad, svgBounds.width - 20])
+                  .range([xpad, svgBounds.width-xpad])
                   .domain(months_list)
 
-      setCountries();
+      setCountriesLegend();
       createLineChart();
   });
 }
@@ -63,7 +63,7 @@ function distinctCountries() {
   return d3.map(WWII_casualties, function(d){ return d.COUNTRY; }).keys()
 }
 
-function setCountries () {
+function setCountriesLegend () {
   array = []
   for (i=0; i<distinctCountries().length; i++)
     array.push(i)
@@ -75,7 +75,7 @@ function setCountries () {
                         .data(distinctCountries())
                         .enter()
                         .append("g")
-                        .attr("transform", function(d,i) { return "translate(0,"+i*19+")" })
+                        .attr("transform", function(d,i) { return "translate(0,"+i*20+")" })
 
   newGr.append("rect")
        .attr("width", "18px")
@@ -96,6 +96,35 @@ function setCountries () {
         else
           removeLine(d)
       })
+}
+
+function createLineChart(){
+
+  d3.select("#linechart").select("#xAxis")
+                        .attr("transform", "translate(-5,"+(svgBounds.height-ypad)+")")
+                        .transition()
+                        .duration(1000)
+                        .call(d3.axisBottom(xScale).ticks(months_list.length))
+                        .selectAll("text")
+                        .attr("y", 0)
+                        .attr("x", 10)
+                        .attr("dy", ".3em")
+                        .attr("transform", "rotate(90)")
+
+  d3.select("#linechart").select("#yAxis")
+                        .attr("transform", "translate("+xpad+",0)")
+                        .transition()
+                        .duration(1000)
+                        .call(d3.axisLeft(yScale).ticks(30, "s"));
+
+  d3.select("#linechart").select("#grid").selectAll("line")
+    .data(months_list)
+    .enter()
+    .append("line")
+    .attr("x1", function(d) { return xScale(d); })
+    .attr("x2", function(d) { return xScale(d); })
+    .attr("y1", ypad-20)
+    .attr("y2", svgBounds.height-ypad)
 }
 
 function getStateDeaths(state) {
@@ -148,35 +177,6 @@ function getStateDeaths(state) {
   return [avgDeath_list, maxDeathValue];
 }
 
-function createLineChart(){
-
-  d3.select("#linechart").select("#xAxis")
-                        .attr("transform", "translate(-5,"+(svgBounds.height-ypad)+")")
-                        .transition()
-                        .duration(1000)
-                        .call(d3.axisBottom(xScale).ticks(months_list.length))
-                        .selectAll("text")
-                        .attr("y", 0)
-                        .attr("x", 10)
-                        .attr("dy", ".3em")
-                        .attr("transform", "rotate(90)")
-
-  d3.select("#linechart").select("#yAxis")
-                        .attr("transform", "translate("+xpad+",0)")
-                        .transition()
-                        .duration(1000)
-                        .call(d3.axisLeft(yScale).ticks(30, "s"));
-
-  d3.select("#linechart").select("#grid").selectAll("line")
-    .data(months_list)
-    .enter()
-    .append("line")
-    .attr("x1", function(d) { return xScale(d); })
-    .attr("x2", function(d) { return xScale(d); })
-    .attr("y1", 0)
-    .attr("y2", svgBounds.height-ypad)
-}
-
 function addLine(state, colorIdx){
   [avgDeaths_list, maxDeathValue] = getStateDeaths(state)
 
@@ -218,9 +218,7 @@ function removeLine(state){
 }
 
 function rescaleLinechart() {
-  yScale = d3.scaleLinear()
-              .range([svgBounds.height-ypad, 0])
-              .domain([0, currentMaxDeaths+(0.1*currentMaxDeaths)]);
+  yScale = yScale.domain([0, currentMaxDeaths+(0.1*currentMaxDeaths)]);
 
   d3.select("#linechart").select("#yAxis")
                         .transition()
