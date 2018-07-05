@@ -4,11 +4,11 @@
 }
 
 .mapEvents-container{
-  height: 75%;
+  height: 80%;
 }
 
 .timeLine-container{
-  height: 15%;
+  height: 10%;
 }
 
 /**************** MAP ****************/
@@ -75,8 +75,6 @@ li p {
 /***************** TIMELINE ********************/
 .timeline {
   height: 100%;
-  padding-top: 50px;
-  border: solid lightgray 1px;
 }
 
 .timeline path {
@@ -85,7 +83,10 @@ li p {
 }
 
 .timeline text{
-  stroke: black;
-  font-size: 15px;
+  font-size: 10px;
   cursor: pointer;
+}
+
+.draggable {
+  cursor: move;
 }

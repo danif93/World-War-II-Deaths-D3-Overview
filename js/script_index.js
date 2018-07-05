@@ -1,7 +1,13 @@
-var warMonths;
+var months_list = [];
 var events;
-var pad = 50;
+var pad = 20;
 var xScale
+
+var drag = d3.drag()
+    .on("drag", function() { dragmove(this, d3.select('#drag')); })
+    .on('end', function() { dragend(this, d3.select('#drag')); });
+
+var timeLineBounds = d3.select("#timeline").node().getBoundingClientRect()
 
 ////////////////////////////  LOAD FILE   ////////////////////////////
 
@@ -27,12 +33,15 @@ window.onload = () => {
         d.year = +d.YEAR;
       });
       warMonths = csv_year;
-
-      setTimeLine()
+      warMonths.forEach(function(d){
+        months_list.push(d.MONTHS.substring(0,3)+" "+d.YEAR.substring(2,4));
+      })
+      setTimeLine();
   });
 
-  loadMap("February_1938")
-  createLegend()
+  loadMap("February_1938");
+  createLegend();
+
 }
 
 function loadMap (year) {
@@ -51,7 +60,7 @@ function loadMap (year) {
 ////////////////////////////  END LOADING   ////////////////////////////
 
 
-function setYearMonths(year){
+/*function setYearMonths(year){
   var list_months = []
 
   warMonths.forEach(function(d){
@@ -61,10 +70,10 @@ function setYearMonths(year){
 
   xScale = d3.scaleBand()
                 .domain(list_months.map(function(d) { return d; }))
-                .range([pad, d3.select("#timeline").node().getBoundingClientRect().width-pad]);
+                .range([pad, timeLineBounds.width-pad]);
 
   return d3.axisBottom(xScale)
-}
+}*/
 
 function createLegend (){
 
@@ -107,47 +116,62 @@ function drawMap (world, year) {
                    .attr("class", function(d) { return d3.select(this).attr("class")+" "+d.properties.status; })
 }
 
-function setTimeLine(){
+function dragmove(d, elem) {
+  elem.attr("x", d.x = Math.max(pad+10, Math.min(timeLineBounds.width-pad, d3.event.x))-elem.attr("width")/2)
+}
+
+function dragend(d, elem){
+  var dateDict = xScale(elem.attr('x'))
+  var date = dateDict.MONTHS+"_"+dateDict.YEAR
+
   var list_events_inside = []
   var list_events_outside = []
 
+  events.forEach(function(ev){
+    if (ev.DATE == date) {
+      if (ev.event_pos[0] != 0)
+        list_events_inside.push(ev)
+      else
+        list_events_outside.push(ev)
+    }
+  })
+
+  loadMap(date);
+
+  updateOutEvents(list_events_outside);
+  updateMap(list_events_inside);
+}
+
+function setTimeLine() {
+
+  var svg = d3.select("#timeline");
+
   xScale = d3.scaleBand()
-              .domain(warMonths.map(function(d) { return d.year; }))
-              .range([pad, d3.select("#timeline").node().getBoundingClientRect().width-pad])
+              .range([pad, timeLineBounds.width-pad])
+              .domain(months_list)
 
-  var timeline = d3.select("#timeline");
+  svg.select("#xAxis")
+            .attr("transform", "translate(0,"+(timeLineBounds.height/5)+")")
+            .transition()
+            .duration(1000)
+            .call(d3.axisBottom(xScale))
+            .selectAll("text")
+            .attr("y", 0)
+            .attr("x", 25)
+            .attr("dy", "-.2em")
+            .attr("transform", "rotate(90)")
 
-  timeline.call(d3.axisBottom(xScale))
-      .selectAll("text")
-      .attr("y", 20)
-      .attr("x", 0)
-      .attr("dy", ".35em")
-      .on("click", function(yr) {
-        timeline.call(setYearMonths(yr));
-        d3.event.stopPropagation();
-        timeline.selectAll("text")
-            .on("click", function(mnt){
-              var year = mnt + "_" + yr;
-              events.forEach(function(ev){
-                if (ev.DATE == year) {
-                  if (ev.event_pos[0] != 0)
-                    list_events_inside.push(ev)
-                  else
-                    list_events_outside.push(ev)
-                }
-              })
+  var dragrect = svg.select("#drag")
+      .attr("x", pad+5)
+      .attr("y", 0)
+      .attr("height", timeLineBounds.height/3)
+      .attr("width", xScale.bandwidth())
 
-              loadMap(year);
+  xScale = d3.scaleQuantize()
+              .range(warMonths)
+              .domain([pad, timeLineBounds.width-pad])
 
-              setTimeout(function () {
-                updateOutEvents(list_events_outside);
-                updateMap(list_events_inside);
-                list_events_inside = []
-                list_events_outside = []
-              }, 20);
-              setTimeLine()
-            })
-      })
+  dragrect.call(drag);
 }
 
 function clearPoints() {
