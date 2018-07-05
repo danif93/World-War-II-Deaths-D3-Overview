@@ -43,37 +43,7 @@ window.onload = () => {
   createLegend();
 
 }
-
-function loadMap (year) {
-  d3.json("../datasets/TopoJsonFinal/"+year+".json", function (error, world) {
-      if (error) {
-        console.log(error);
-  	    throw error;
-      }
-
-    drawMap(world, year);
-    var res = year.split("_")
-    d3.select("#title").html("<h2>"+res[1]+", "+res[0]+"</h2>")
-  });
-}
-
 ////////////////////////////  END LOADING   ////////////////////////////
-
-
-/*function setYearMonths(year){
-  var list_months = []
-
-  warMonths.forEach(function(d){
-                if (d.year == year)
-                  list_months.push(d.MONTHS)
-                })
-
-  xScale = d3.scaleBand()
-                .domain(list_months.map(function(d) { return d; }))
-                .range([pad, timeLineBounds.width-pad]);
-
-  return d3.axisBottom(xScale)
-}*/
 
 function createLegend (){
 
@@ -101,45 +71,6 @@ function createLegend (){
        .attr("dy", ".35em")
        .text(function(d){ return d.replace("-", " ")});
 
-}
-
-function drawMap (world, year) {
-
-  d3.select("#map").selectAll("path").remove();
-
-  d3.select("#map").selectAll("path")
-                   .data(topojson.feature(world, world.objects[year]).features)
-                   .enter()
-                   .append("path")
-                   .attr("d", d3.geoPath())
-                   .classed("countries", true)
-                   .attr("class", function(d) { return d3.select(this).attr("class")+" "+d.properties.status; })
-}
-
-function dragmove(d, elem) {
-  elem.attr("x", d.x = Math.max(pad+10, Math.min(timeLineBounds.width-pad, d3.event.x))-elem.attr("width")/2)
-}
-
-function dragend(d, elem){
-  var dateDict = xScale(elem.attr('x'))
-  var date = dateDict.MONTHS+"_"+dateDict.YEAR
-
-  var list_events_inside = []
-  var list_events_outside = []
-
-  events.forEach(function(ev){
-    if (ev.DATE == date) {
-      if (ev.event_pos[0] != 0)
-        list_events_inside.push(ev)
-      else
-        list_events_outside.push(ev)
-    }
-  })
-
-  loadMap(date);
-
-  updateOutEvents(list_events_outside);
-  updateMap(list_events_inside);
 }
 
 function setTimeLine() {
@@ -174,11 +105,63 @@ function setTimeLine() {
   dragrect.call(drag);
 }
 
+function dragmove(d, elem) {
+  elem.attr("x", d.x = Math.max(pad+10, Math.min(timeLineBounds.width-pad, d3.event.x))-elem.attr("width")/2)
+}
+
+function dragend(d, elem){
+  var dateDict = xScale(elem.attr('x'))
+  var date = dateDict.MONTHS+"_"+dateDict.YEAR
+
+  var list_events_inside = []
+  var list_events_outside = []
+
+  events.forEach(function(ev){
+    if (ev.DATE == date) {
+      if (ev.event_pos[0] != 0)
+        list_events_inside.push(ev)
+      else
+        list_events_outside.push(ev)
+    }
+  })
+
+  loadMap(date);
+
+  updateOutEvents(list_events_outside);
+  updateEventMap(list_events_inside);
+}
+
+function loadMap (year) {
+  d3.json("../datasets/TopoJsonFinal/"+year+".json", function (error, world) {
+      if (error) {
+        console.log(error);
+  	    throw error;
+      }
+
+    drawMap(world, year);
+    var res = year.split("_")
+    d3.select("#title").html("<h2>"+res[1]+", "+res[0]+"</h2>")
+  });
+}
+
+function drawMap (world, year) {
+
+  d3.select("#map").selectAll("path").remove();
+
+  d3.select("#map").selectAll("path")
+                   .data(topojson.feature(world, world.objects[year]).features)
+                   .enter()
+                   .append("path")
+                   .attr("d", d3.geoPath())
+                   .classed("countries", true)
+                   .attr("class", function(d) { return d3.select(this).attr("class")+" "+d.properties.status; })
+}
+
 function clearPoints() {
   d3.select("#points").selectAll("circle").remove();
 }
 
-function updateMap(list_events) {
+function updateEventMap(list_events) {
 
   clearPoints();
 
@@ -204,27 +187,24 @@ function updateMap(list_events) {
           .attr("r", "6px")
           .attr("cursor", "pointer")
           .on("mouseover", function(d) {
-                              var x = d3.event.pageX
-                              var y = d3.event.pageY
+                          var x = d3.event.pageX
+                          var y = d3.event.pageY
 
-                              d3.select(this)
-                                .attr("r", 9)
+                          d3.select(this).attr("r", 9)
 
-                              tooltip.transition()
-                                     .duration(200)
-                                     .style("opacity", 1);
+                          tooltip.transition()
+                                 .duration(200)
+                                 .style("opacity", 1);
 
-                              tooltip.style("left", (x + 10) + "px")
-                                     .style("top", y + "px")
-                                     .html("<h4><i>"+ ev.SUMMARY + "</i></h4>" + ev.DETAILED_INFORMATION)
-
-                            })
+                          tooltip.style("left", (x + 10) + "px")
+                                 .style("top", y + "px")
+                                 .html("<h4><i>"+ ev.SUMMARY + "</i></h4>" + ev.DETAILED_INFORMATION)
+                        })
           .on("mouseout", function(d) {
-                          d3.select(this)
-                            .attr("r", 6)
-                            tooltip.transition()
-                                   .duration(200)
-                                   .style("opacity", 0);
+                          d3.select(this).attr("r", 6)
+                          tooltip.transition()
+                                 .duration(200)
+                                 .style("opacity", 0);
                         })
   })
 }
@@ -232,6 +212,7 @@ function updateMap(list_events) {
 function updateOutEvents(list_events) {
 
   d3.selectAll("ul").remove();
+
   var title = d3.select("#event_outside")
 
   if (list_events.length > 0) {
