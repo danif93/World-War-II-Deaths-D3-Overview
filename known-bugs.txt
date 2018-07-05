@@ -1,1 +1,2 @@
 1. (map) dot radius initialization is bigger than the on mouseout one;
+2. (comparison) there is only one tupla with Slovakia but it is "holocaust-jewish", so when I click on rect Slovakia we create a line chart with all values 0
