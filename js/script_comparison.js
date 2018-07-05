@@ -107,7 +107,7 @@ function getStateDeaths(state) {
   months_list.forEach(function(m) { avgDeath_list.push({"month":m, "deaths":0}) })
 
   WWII_casualties.forEach(function(d) {
-    if (d.COUNTRY == state && d.TAGS != "holocaust-jewish" /*&& d.TAGS != "air-firebomb"*/) {
+    if (d.COUNTRY == state /*&& d.TAGS != "air-firebomb"*/) {
 
       var count_month = 0
       var startdate = d.STARTDATE

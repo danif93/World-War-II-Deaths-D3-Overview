@@ -5,12 +5,14 @@
 body, html {
   font-family: "Quicksand", sans-serif;
   height: 98%;
-  width: 100%
+  width: 100%;
 }
 
 header{
   height: 13%;
-  padding-left: 12px
+  width: 100%;
+  padding-left: 12px;
+  padding-bottom: 12px;
 }
 
 .btn-group{
@@ -21,6 +23,6 @@ header{
 
 .page_container{
   height: 80%;
-  width: 100%;
+  width: 98%;
   /*padding-top: 20px;*/
 }

@@ -1,55 +1,62 @@
 .title{
-  height:6%;
+  height: 6%;
   text-align: center;
 }
 
+.mapEvents-container{
+  height:78%;
+  padding-top: 10px;
+}
+
+.timeLine-container{
+  height:15%
+}
+
+/**************** MAP ****************/
 .map{
   height: 100%;
 }
 
-/* countries */
 .countries {
-    stroke: #f7f7f7;
-    fill: #d9d9d9;
+  stroke: #f7f7f7;
 }
-
-.axis {
+.Axis {
   fill: #BF360C;
 }
-
-.axis_occupied{
+.Axis-occupied{
   fill: #EF5350;
 }
-
-.allies{
+.Allies{
   fill: #0277BD;
 }
-
-.neutral{
+.Neutral{
   fill: #d9d9d9;
 }
 
 .gold {
-    fill: #FFD700;
-    opacity: .8;
-    stroke: #252525;
-    stroke-width: 1px;
+  fill: #FFD700;
+  opacity: .8;
+  stroke: #252525;
+  stroke-width: 1px;
 }
 
 .tooltip {
-    position: absolute;
-    line-height: .7;
-    font-weight: bold;
-    padding: 8px;
-    background: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    width: 360px;
-    font: 10px sans-serif;
-    border-radius: 4px;
-    pointer-events: none;
+  position: absolute;
+  line-height: .7;
+  font-weight: bold;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  width: 360px;
+  font: 10px sans-serif;
+  border-radius: 4px;
+  pointer-events: none;
+  display: inline;
+
 }
 
-.events{
+/**************** OUTER EVENTS ****************/
+.events-container{
   height: 100%;
   border-left: solid lightgray 1px;
 }
@@ -60,23 +67,14 @@
 
 .events_outside_info{
   padding-top: 10px;
-  padding-right: 50px;
 }
 
 li p {
-  font-size: 15px;
+  font-size: 13px;
   font-weight: normal;
 }
 
-.map_events{
-  height:78%;
-}
-
-/* TIMELINE */
-.timeLine-container{
-  height:18%
-}
-
+/***************** TIMELINE ********************/
 .timeline {
   height: 100%;
   padding-top: 50px;
