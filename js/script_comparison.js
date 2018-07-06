@@ -33,8 +33,6 @@ window.onload = () => {
   	    throw error;
       }
       csv_wwii.forEach(function (d) {
-        d.startdate = +d.STARTDATE
-        d.endate = +d.ENDATE
         d.deathsfinal = +d.DEATHSFINAL;
         d.civilianrate = +d.CIVILIANRATE;
       });
@@ -139,11 +137,9 @@ function getStateDeaths(state) {
     if (d.COUNTRY == state /*&& d.TAGS != "air-firebomb"*/) {
 
       var count_month = 0
-      var startdate = d.STARTDATE
-      var endate = d.ENDATE
 
-      var split_startdate = startdate.match(/.{1,2}/g)
-      var split_endate = endate.match(/.{1,2}/g)
+      var split_startdate = d.STARTDATE.match(/.{1,2}/g)
+      var split_endate = d.ENDATE.match(/.{1,2}/g)
 
       count_month += parseInt(split_endate[3])-parseInt(split_startdate[3])
       if (count_month > 0) {

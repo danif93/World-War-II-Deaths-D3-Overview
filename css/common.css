@@ -7,19 +7,36 @@ body, html {
 }
 
 header{
-  height: 15%;
+  height: 11%;
   width: 100%;
-  padding-left: 12px;
+  padding-left: 25px ;
   padding-bottom: 12px;
+}
+
+.header{
+  padding-left: 0px !important;
+}
+
+.name, .email{
+  font-size: 16px;
+  font-style: italic;
+  text-align: right;
 }
 
 .btn-group{
   height: 5%;
   padding-left: 10px;
   padding-right: 10px;
+
 }
 
+.my-btn {
+  background-color: #BDBDBD;
+  color: black;
+  font-size: 130% !important
+
+}
 .page_container{
-  height: 80%;
+  height: 84%;
   width: 100%;
 }

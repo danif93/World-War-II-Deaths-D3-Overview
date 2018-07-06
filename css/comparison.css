@@ -1,6 +1,8 @@
 .countries{
   height: 100%;
-  padding: 10px;
+  padding-top: 10px;
+  padding-left: 0 !important;
+
 }
 
 .linechart{

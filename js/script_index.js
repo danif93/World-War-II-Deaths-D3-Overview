@@ -57,7 +57,6 @@ function createLegend (){
                .append("g")
 
   newgr.append("rect")
-       .attr("x", 12 )
        .attr("y", function(d,i) {
                     return 40 + (i * 25)
                   })
@@ -66,7 +65,7 @@ function createLegend (){
        .attr("class", function(d){ return d; });
 
   newgr.append("text")
-       .attr("x", 37)
+       .attr("x", 25)
        .attr("y", function(d,i) { return 47+(i*25) })
        .attr("dy", ".35em")
        .text(function(d){ return d.replace("-", " ")});
