@@ -12,7 +12,7 @@ header{
   padding-bottom: 12px;
 }
 
-.name, .email{
+.info {
   font-size: 16px;
   font-style: italic;
   text-align: right;
