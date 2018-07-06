@@ -23,7 +23,6 @@ window.onload = () => {
       console.log(error);
 	    throw error;
     }
-    //csv_year.forEach(function (d) { d.year = +d.YEAR; });
     warMonths = csv_year;
   });
 
@@ -32,10 +31,6 @@ window.onload = () => {
         console.log(error);
   	    throw error;
       }
-      csv_wwii.forEach(function (d) {
-        d.deathsfinal = +d.DEATHSFINAL;
-        d.civilianrate = +d.CIVILIANRATE;
-      });
 
       WWII_casualties = csv_wwii;
 
@@ -97,25 +92,24 @@ function setCountriesLegend () {
 }
 
 function createLineChart(){
+  var svg = d3.select("#linechart");
 
-  d3.select("#linechart").select("#xAxis")
-                        .attr("transform", "translate(-5,"+(svgBounds.height-ypad)+")")
-                        .transition()
-                        .duration(1000)
-                        .call(d3.axisBottom(xScale).ticks(months_list.length))
-                        .selectAll("text")
-                        .attr("y", 0)
-                        .attr("x", 10)
-                        .attr("dy", ".3em")
-                        .attr("transform", "rotate(90)")
+  svg.select("#xAxis")
+      .attr("transform", "translate(-5,"+(svgBounds.height-ypad)+")")
+      .transition().duration(1000)
+      .call(d3.axisBottom(xScale))
+      .selectAll("text")
+      .attr("y", 0)
+      .attr("x", 10)
+      .attr("dy", ".3em")
+      .attr("transform", "rotate(90)")
 
-  d3.select("#linechart").select("#yAxis")
-                        .attr("transform", "translate("+xpad+",0)")
-                        .transition()
-                        .duration(1000)
-                        .call(d3.axisLeft(yScale).ticks(30, "s"));
+  svg.select("#yAxis")
+      .attr("transform", "translate("+xpad+",0)")
+      .transition().duration(1000)
+      .call(d3.axisLeft(yScale));
 
-  d3.select("#linechart").select("#grid").selectAll("line")
+  svg.select("#grid").selectAll("line")
     .data(months_list)
     .enter()
     .append("line")
@@ -158,9 +152,10 @@ function getStateDeaths(state) {
 
       for (i=0; i<count_month; i++) {
         avgDeath_list.forEach(function(dict){
-          if (dict.month == months[String(month)]+" "+String(year)){
-            dict.deaths += parseInt(d.DEATHSFINAL/count_month)}
+          if (dict.month == months[String(month)]+" "+String(year)) {
+            dict.deaths += +d.DEATHSFINAL/count_month
             if (dict.deaths > maxDeathValue) maxDeathValue = dict.deaths
+          }
         })
         month++
         if (month==13) {
@@ -188,15 +183,13 @@ function addLine(state, colorIdx){
                     .attr("stroke", colorScale(colorIdx))
                     .attr("d", LineGenerator(avgDeaths_list))
                     .attr("opacity", 0)
-                    .transition()
-                    .duration(1000)
+                    .transition().duration(1000)
                     .attr("opacity", 1)
 }
 
 function removeLine(state){
   d3.select("#lines").select("#"+state.replace(" ", ""))
-    .transition()
-    .duration(1000)
+    .transition().duration(1000)
     .attr("opacity", 0)
     .remove()
 
@@ -217,14 +210,12 @@ function rescaleLinechart() {
   yScale = yScale.domain([0, currentMaxDeaths+(0.1*currentMaxDeaths)]);
 
   d3.select("#linechart").select("#yAxis")
-                        .transition()
-                        .duration(1000)
-                        .call(d3.axisLeft(yScale).ticks(30, "s"));
+                        .transition().duration(1000)
+                        .call(d3.axisLeft(yScale));
 
   Object.keys(stateDeaths).forEach(function(s){
     d3.select("#lines").select("#"+s.replace(" ", ""))
-    .transition()
-    .duration(1000)
+    .transition().duration(1000)
     .attr("d", LineGenerator(stateDeaths[s][0]))
   })
 }

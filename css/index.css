@@ -37,6 +37,7 @@
   opacity: .8;
   stroke: #252525;
   stroke-width: 1px;
+  cursor: pointer;
 }
 
 .tooltip {

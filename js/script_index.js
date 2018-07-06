@@ -10,12 +10,11 @@ var drag = d3.drag()
 var timeLineBounds = d3.select("#timeline").node().getBoundingClientRect()
 
 ////////////////////////////  LOAD FILE   ////////////////////////////
-
 window.onload = () => {
   d3.csv("../datasets/events.csv", function (error, csv_events) {
       if (error) {
-          console.log(error);
-  	throw error;
+        console.log(error);
+        throw error;
       }
       csv_events.forEach(function (d) {
         d.event_pos = [+d.LAT, +d.LON];
@@ -29,9 +28,6 @@ window.onload = () => {
         console.log(error);
   	    throw error;
       }
-      csv_year.forEach(function (d) {
-        d.year = +d.YEAR;
-      });
       warMonths = csv_year;
       warMonths.forEach(function(d){
         months_list.push(d.MONTHS.substring(0,3)+" "+d.YEAR.substring(2,4));
@@ -57,9 +53,7 @@ function createLegend (){
                .append("g")
 
   newgr.append("rect")
-       .attr("y", function(d,i) {
-                    return 40 + (i * 25)
-                  })
+       .attr("y", function(d,i) { return 40+(i*25) })
        .attr("width", 15)
        .attr("height", 15)
        .attr("class", function(d){ return d; });
@@ -82,8 +76,7 @@ function setTimeLine() {
 
   svg.select("#xAxis")
             .attr("transform", "translate(0,"+(timeLineBounds.height/5)+")")
-            .transition()
-            .duration(1000)
+            .transition().duration(1000)
             .call(d3.axisBottom(xScale))
             .selectAll("text")
             .attr("y", 0)
@@ -176,35 +169,26 @@ function updateEventMap(list_events) {
 
     points.data([point_pos])
           .append("circle")
-          .attr("cx", function(d){
-                       return d[0];
-                     })
-          .attr("cy", function(d){
-                       return d[1]
-                     })
+          .attr("cx", function(d){ return d[0]; })
+          .attr("cy", function(d){ return d[1]; })
           .attr("class", "gold")
           .attr("r", "6px")
-          .attr("cursor", "pointer")
           .on("mouseover", function(d) {
                           var x = d3.event.pageX
                           var y = d3.event.pageY
 
                           d3.select(this).attr("r", 9)
 
-                          tooltip.transition()
-                                 .duration(200)
-                                 .style("opacity", 1);
+                          tooltip.transition().duration(200).style("opacity", 1);
 
-                          tooltip.style("left", (x + 10) + "px")
-                                 .style("top", y + "px")
+                          tooltip.style("left", (x+10)+"px")
+                                 .style("top", y+"px")
                                  .html("<h4><i>"+ ev.SUMMARY + "</i></h4>" + ev.DETAILED_INFORMATION)
-                        })
+                          })
           .on("mouseout", function(d) {
                           d3.select(this).attr("r", 6)
-                          tooltip.transition()
-                                 .duration(200)
-                                 .style("opacity", 0);
-                        })
+                          tooltip.transition().duration(200).style("opacity", 0);
+                          })
   })
 }
 
@@ -212,7 +196,7 @@ function updateOutEvents(list_events) {
 
   d3.selectAll("ul").remove();
 
-  var title = d3.select("#event_outside")
+  var title = d3.select("#event_outside");
 
   if (list_events.length > 0) {
 

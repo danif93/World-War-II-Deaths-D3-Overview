@@ -25,12 +25,11 @@
 
 /**********************  STACKED BARCHART  **********************/
 .stackchart {
-  height: 65%;
-  background-color: red;
+  height: 55%;
 }
 
 /**********************  SUNBUSRST  **********************/
 .sunburst {
-  height: 35%;
+  height: 45%;
   background-color: blue;
 }
