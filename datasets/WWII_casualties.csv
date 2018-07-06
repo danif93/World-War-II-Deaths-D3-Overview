@@ -151,7 +151,7 @@ Germany,28121944,29121944,65,1,air-firebomb
 Germany,22121944,22121944,154,1,air-firebomb
 Germany,17121944,17121944,562,1,air-firebomb
 Germany,17121944,17121944,707,1,air-firebomb
-Germany,04121944,04121944,68.5,1,air-firebomb
+Germany,04121944,04121944,68,1,air-firebomb
 Germany,04121944,04121944,6500,1,air-firebomb
 Germany,27111944,27111944,2850,1,air-firebomb
 Germany,25111944,26111944,65,1,air-firebomb
@@ -159,8 +159,8 @@ Germany,21111944,21111944,64,1,air-firebomb
 Germany,16111944,16111944,3106,1,air-firebomb
 Germany,06111944,06111944,109,1,air-firebomb
 Germany,04111944,04111944,997,1,air-firebomb
-Germany,26101944,26101944,150.5,1,air-firebomb
-Germany,23101944,25101944,1181.5,1,air-firebomb
+Germany,26101944,26101944,150,1,air-firebomb
+Germany,23101944,25101944,1181,1,air-firebomb
 Germany,19101944,20101944,237,1,air-firebomb
 Germany,19101944,19101944,338,1,air-firebomb
 Germany,16101944,16101944,245,1,air-firebomb
@@ -178,7 +178,7 @@ Germany,11091944,12091944,11500,1,air-firebomb
 Germany,10091944,10091944,281,1,air-firebomb
 Germany,30081944,30081944,34,1,air-firebomb
 Germany,25081944,25081944,110,1,air-firebomb
-Germany,28031942,29031942,650.5,1,air-firebomb
+Germany,28031942,29031942,650,1,air-firebomb
 Germany,18081944,19081944,1053,1,air-firebomb
 Germany,04081944,04081944,26,1,air-firebomb
 Germany,29071944,29071944,34,1,air-firebomb
@@ -224,7 +224,7 @@ Germany,10081943,11081943,585,1,air-firebomb
 Germany,30071943,31071943,1200,1,air-firebomb
 Germany,26071943,26071943,273,1,air-firebomb
 Germany,24071943,30071943,32000,1,air-firebomb
-Germany,28061943,29061943,4438.5,1,air-firebomb
+Germany,28061943,29061943,4438,1,air-firebomb
 Germany,24061943,24061943,1900,1,air-firebomb
 Germany,22061943,22061943,180,1,air-firebomb
 Germany,11061943,12061943,600,1,air-firebomb
@@ -247,7 +247,7 @@ Germany,12081942,12081942,161,1,air-firebomb
 Germany,30061942,30061942,8,1,air-firebomb
 Germany,28061942,28061942,7,1,air-firebomb
 Germany,26061942,26061942,85,1,air-firebomb
-Germany,30051942,31051942,445.5,1,air-firebomb
+Germany,30051942,31051942,445,1,air-firebomb
 Germany,07051942,07051942,7,1,air-firebomb
 Germany,17041942,17041942,12,1,air-firebomb
 Germany,06041942,06041942,12,1,air-firebomb
@@ -283,13 +283,13 @@ Japan,22061945,22061945,169,0,air-firebomb
 Japan,01091939,31081945,2120000,0,
 Japan,01091939,31081945,389255,1,
 Japan,11081945,11081945,173,0.8,air-firebomb
-Japan,28071945,28071945,1183.5,1,air-firebomb
+Japan,28071945,28071945,1184,1,air-firebomb
 Japan,26071945,26071945,259,1,air-firebomb
 Japan,24071945,24071945,187,1,air-firebomb
-Japan,24071945,24071945,819.5,1,air-firebomb
-Japan,19071945,20071945,136.5,1,air-firebomb
-Japan,19071945,19071945,790.5,1,air-firebomb
-Japan,19071945,19071945,1499.5,1,air-firebomb
+Japan,24071945,24071945,819,1,air-firebomb
+Japan,19071945,20071945,137,1,air-firebomb
+Japan,19071945,19071945,791,1,air-firebomb
+Japan,19071945,19071945,1499,1,air-firebomb
 Japan,19071945,19071945,1088,1,air-firebomb
 Japan,12071945,12071945,109,1,air-firebomb
 Japan,12071945,12071945,628,1,air-firebomb
@@ -297,8 +297,8 @@ Japan,10071945,10071945,828,1,air-firebomb
 Japan,09071945,09071945,675,1,air-firebomb
 Japan,09071945,09071945,1380,1,air-firebomb
 Japan,09071945,09071945,900,1,air-firebomb
-Japan,06071945,06071945,713.5,1,air-firebomb
-Japan,06071945,06071945,1089.5,1,air-firebomb
+Japan,06071945,06071945,714,1,air-firebomb
+Japan,06071945,06071945,1089,1,air-firebomb
 Japan,04071945,04071945,129,1,air-firebomb
 Japan,04071945,04071945,1359,1,air-firebomb
 Japan,03071945,03071945,173,1,air-firebomb

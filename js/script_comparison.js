@@ -1,20 +1,20 @@
-var WWII_casualties
+var WWII_casualties;
 var months = {"1":"Jan", "2":"Feb", "3":"Mar", "4":"Apr", "5":"May", "6":"Jun",
               "7":"Jul", "8":"Aug", "9":"Sep", "10":"Oct", "11":"Nov", "12":"Dec"};
-var svgBounds = d3.select("#linechart").node().getBoundingClientRect()
-var xpad = 30
-var ypad = 60
-var colorScale
-var xScale
+var svgBounds = d3.select("#linechart").node().getBoundingClientRect();
+var xpad = 30;
+var ypad = 60;
+var colorScale;
+var xScale;
 var yScale = d3.scaleLinear()
             .range([svgBounds.height-ypad, ypad-20])
             .domain([0, 100000]);
-var months_list = []
+var months_list = [];
 var LineGenerator = d3.line()
                       .x(function(d) { return xScale(d.month) })
-                      .y(function(d) { return yScale(d.deaths); })
-var stateDeaths = {}
-var currentMaxDeaths = 0
+                      .y(function(d) { return yScale(d.deaths); });
+var stateDeaths = {};
+var currentMaxDeaths = 0;
 
 ////////////////////////////  LOAD FILE & INTIALISE SVG  ////////////////////////////
 window.onload = () => {
@@ -23,7 +23,7 @@ window.onload = () => {
       console.log(error);
 	    throw error;
     }
-    csv_year.forEach(function (d) { d.year = +d.YEAR; });
+    //csv_year.forEach(function (d) { d.year = +d.YEAR; });
     warMonths = csv_year;
   });
 
