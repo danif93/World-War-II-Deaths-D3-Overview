@@ -1,3 +1,7 @@
+.stack_pie {
+  height:100%;
+}
+
 /**********************  BUBBLECHART  **********************/
 .bubblechart {
   height:100%;
@@ -19,17 +23,13 @@
   stroke: white
 }
 
-
-
-.stack_pie {
-  height:100%;
-}
-
+/**********************  STACKED BARCHART  **********************/
 .stackchart {
   height: 65%;
   background-color: red;
 }
 
+/**********************  SUNBUSRST  **********************/
 .sunburst {
   height: 35%;
   background-color: blue;
