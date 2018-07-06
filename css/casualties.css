@@ -1,18 +1,36 @@
-.bubblechart{
-  height:100%;
-  background-color: green;
-}
-
-.stack_pie{
+/**********************  BUBBLECHART  **********************/
+.bubblechart {
   height:100%;
 }
 
-.stackchart{
+.bubblechart g {
+  cursor: pointer;
+}
+
+.bubblechart g text {
+  text-anchor: middle;
+  font-family: sans-serif;
+  fill: white;
+}
+
+.bubblechart title {
+  background: black;
+  fill: white;
+  stroke: white
+}
+
+
+
+.stack_pie {
+  height:100%;
+}
+
+.stackchart {
   height: 65%;
   background-color: red;
 }
 
-.piechart{
+.sunburst {
   height: 35%;
   background-color: blue;
 }
