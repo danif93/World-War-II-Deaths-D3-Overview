@@ -73,6 +73,13 @@ function createStackChart() {
 function createBubbleChart() {
 
   var svg = d3.select("#bubble");
+  var zoomable_layer = svg.append("g");
+
+  zoom = d3.zoom().scaleExtent([1, 60]).on('zoom', function() {
+    return zoomable_layer.attr("transform", d3.event.transform);
+  });
+
+  svg.call(zoom);
 
   var bubble = d3.pack()
     .size([bubbleBounds.width, bubbleBounds.height])
@@ -81,20 +88,16 @@ function createBubbleChart() {
   var nodes = d3.hierarchy( {children: dictParseCSV()} )
                 .sum(function(d) { return d.count; });
 
-  var node = svg.selectAll("g")
+  var node = zoomable_layer.selectAll("g")
                 .data(bubble(nodes).descendants())
                 .enter()
                 .filter(function(d) { return !d.children })
                 .append("g")
-                .attr("id", function(d) { return d.data.name.replace(" ",""); })
                 .attr("transform", function(d) { return "translate("+d.x+","+d.y+")"; })
                 .on("click", function (d, i) {
                   d3.select("#rects").selectAll("g").remove()
                   fillStack(d.data.name, i);
                 });
-
-  node.append("title")
-      .text(function(d) { return d.data.name+": "+d.data.count; });
 
   node.append("circle")
       .attr("r", function(d) { return d.r; })
@@ -102,12 +105,13 @@ function createBubbleChart() {
 
   node.append("text")
       .text(function(d) { return d.data.name; })
-      .attr("font-size", function(d){ return d.r/5; })
+      .attr("font-size", function(d) { return d.r/5; })
 
   node.append("text")
       .attr("dy", "1em")
       .text(function(d) { return d.data.count; })
-      .attr("font-size", function(d){ return d.r/5; })
+      .attr("font-size", function(d) { return d.r/5; })
+
 }
 
 function dictParseCSV (/*year*/) {
