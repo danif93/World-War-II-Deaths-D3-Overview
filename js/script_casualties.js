@@ -42,16 +42,89 @@ window.onload = () => {
                     .domain([0,distinctCountries().length-1])
 
       createBubbleChart();
-      //setCountriesLegend();
-
-      //createSunburst()
-
+      setCountriesLegend();
     });
 }
 ////////////////////////////  END LOAD & INITIALISATION  ////////////////////////////
 
 function distinctCountries() {
   return d3.map(WWII_casualties, function(d) { return d.COUNTRY; }).keys()
+}
+
+function setCountriesLegend() {
+
+  var selRadious;
+  var selCountry;
+
+  var legend = d3.select("#legend")
+
+  var tooltip = d3.select("#my_tooltip")
+  	.attr("class", "tooltip")
+  	.style("opacity", 0);
+
+  var newGr = legend.selectAll("g")
+                        .data(distinctCountries())
+                        .enter()
+                        .append("g")
+                        .attr("transform", function(d,i) { return "translate(0,"+i*20+")" })
+
+  newGr.append("rect")
+       .attr("width", "18px")
+       .attr("height", "18px")
+       .attr("fill", function(d, i) { return colorScale(i); })
+       .attr("opacity", 0.2)
+       .attr("id", function(d, i){ return "r"+i })
+
+  newGr.append("text")
+      .attr("x", 30)
+      .attr("dy", "1.05em")
+      .text(function(d) { return d })
+      .attr("cursor", "pointer")
+      .on("click", function(d, i) {
+
+        [yearList, dictDeathRatio] = getYearsDeathRatio(d)
+        d3.select("#rects").selectAll("g").remove()
+        d3.select("#chart").selectAll("path").remove()
+
+        d3.selectAll(".selected").classed("selected", false)
+        d3.select("#r"+i).classed("selected", true)
+        d3.select("#"+d.replace(" ", "")).classed("selected", true)
+        console.log(d3.select("#"+d.replace(" ", "")).classed("selected"));
+
+        fillStack(yearList, i);
+        fillSunburst(dictDeathRatio, i);
+      })
+      .on("mouseover", function(d,i) {
+
+                        selCountry = d3.select("#"+d.replace(" ", ""))
+
+                        selRadious = selCountry.select("circle").attr("r")
+
+                        selCountry.select("circle").transition().duration(1000)
+                                                .attr("opacity", 1) // va al g
+                                                .attr("r", 70)
+
+                        //tooltip.transition().duration(200).style("opacity", 1);
+
+                        //tooltip.style("left", x+"px")
+                               //.style("top", y+"px")
+
+                        //country.attr("transform",function(d,i) { return "translate(0,"+i*20+")" })
+
+
+
+
+
+                      })
+      .on("mouseout", function(d) {
+                        console.log(  selCountry.select("circle").classed("selected"));
+                        selCountry.select("circle").transition().duration(1000)
+                                                .attr("opacity", 0.3)
+                                                .attr("r", selRadious)
+                        //d3.select("#big-circle").selectAll("*").remove()
+                        //tooltip.transition().duration(200).style("opacity", 0);
+                      })
+
 }
 
 
@@ -97,20 +170,25 @@ function createBubbleChart() {
                 .enter()
                 .filter(function(d) { return !d.children })
                 .append("g")
+                .attr("id", function(d){ return d.data.name.replace(" ", "")})
                 .attr("transform", function(d) { return "translate("+d.x+","+d.y+")"; })
                 .on("click", function (d, i) {
                   [yearList, dictDeathRatio] = getYearsDeathRatio(d.data.name)
                   d3.select("#rects").selectAll("g").remove()
                   d3.select("#chart").selectAll("path").remove()
-                  console.log(yearList);
-                  console.log(dictDeathRatio);
+
+                  d3.selectAll(".selected").classed("selected", false)
+                  d3.select(this).selectAll("circle").classed("selected", true)
+                  d3.select("#r"+i).classed("selected", true)
+
                   fillStack(yearList, i);
                   fillSunburst(dictDeathRatio, i);
                 });
 
   node.append("circle")
       .attr("r", function(d) { return d.r; })
-      .attr("fill", function(d,i) { return colorScale(i); });
+      .attr("opacity", 0.3)
+      .attr("fill", function(d, i) { return colorScale(i); })
 
   node.append("text")
       .text(function(d) { return d.data.name; })
@@ -120,7 +198,6 @@ function createBubbleChart() {
       .attr("dy", "1em")
       .text(function(d) { return d.data.count; })
       .attr("font-size", function(d) { return d.r/5; })
-
 }
 
 function dictParseCSV (/*year*/) {
@@ -169,9 +246,9 @@ function fillStack(yearList, i) {
       .attr("width", xScale.bandwidth())
       .attr("fill", colorScale(i))
       .attr("height", function(d) { return yScale(d.military)-yScale(d.military+d.civilian); })
-      .style("opacity", 0)
+      .attr("opacity", 0)
       .transition().duration(1000)
-      .style("opacity", 0.5)
+      .attr("opacity", 0.5)
 
 
   newGr.append("rect")
@@ -179,23 +256,20 @@ function fillStack(yearList, i) {
       .attr("y", function(d) { return yScale(0)-yScale(d.civilian); })
       .attr("fill", colorScale(i))
       .attr("height", function(d) { return yScale(0)-yScale(d.military); })
-      .style("opacity", 0)
+      .attr("opacity", 0)
       .transition().duration(1000)
-      .style("opacity", 1)
+      .attr("opacity", 1)
 }
 
 function fillSunburst(dictDeathRatio, i) {
 
-  // Variables
   var width = sunburstBounds.width;
   var height = sunburstBounds.height;
-  var radius = Math.min(width, height) / 2;
-  var color = d3.scaleOrdinal(d3.schemeCategory20b);
+  var radius = Math.min(width-xpad, height-ypad) / 2;
 
-  // Create primary <g> element
   var g = d3.select('#sunburst')
       .select("#chart")
-      .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+      .attr('transform', 'translate(' + (width-xpad)/2 + ',' + (height-ypad)/2 + ')');
 
   // Data strucure
   var partition = d3.partition()

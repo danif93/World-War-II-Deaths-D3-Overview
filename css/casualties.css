@@ -2,8 +2,22 @@
   height:100%;
 }
 
+.bubblechart-container{
+  height:100%;
+}
+
 /**********************  BUBBLECHART  **********************/
+.legend{
+  padding-top: 10px;
+  height:100%;
+}
+
+.selected{
+  opacity: 1;
+}
+
 .bubblechart {
+  padding-top: 10px;
   height:100%;
 }
 
@@ -23,14 +37,30 @@
   stroke: white
 }
 
+.tooltip {
+  text-anchor: middle;
+  font-family: sans-serif;
+  fill: white;
+  position: absolute;
+  line-height: .7;
+  padding: 8px;
+  background: rgba(190, 190, 190, 0.8);
+  color: #fff;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  pointer-events: none;
+  display: inline;
+}
+
 /**********************  STACKED BARCHART  **********************/
 .stackchart {
-  height: 55%;
+  height: 50%;
 }
 
 /**********************  SUNBUSRST  **********************/
 .sunburst {
-  height: 45%;
+  height: 50%;
 }
 .sunburst path {
   stroke: #fff;

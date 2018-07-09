@@ -37,9 +37,21 @@
 		<a role="button" class="btn btn-default" href="comparison.html"> Comparison </a>
 	</div>
 
-  <div class="page_container" class="col-sm-12">
-    <svg id="bubble" class="bubblechart col-sm-12 col-md-6"></svg>
-		<div class="stack_pie col-sm-12 col-md-6">
+  <div class="page_container" class="col-sm-12 col-md-12">
+
+		<div class="bubblechart-container col-sm-12 col-md-8">
+
+			<svg id="legend" class="legend col-sm-2 col-md-2"></svg>
+			<svg id="bubble" class="bubblechart col-sm-10 col-md-10"></svg>
+
+			<div id="my_tooltip" class="tooltip">
+				<svg id="big-circle"></svg>
+			</div>
+
+		</div>
+
+
+		<div class="stack_pie col-sm-12 col-md-4">
       <svg id="stack" class="stackchart col-sm-12">
 				<g id="xAxis"></g>
 				<g id="yAxis"></g>
