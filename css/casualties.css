@@ -2,8 +2,22 @@
   height:100%;
 }
 
+.bubblechart-container{
+  height:100%;
+}
+
 /**********************  BUBBLECHART  **********************/
+.legend{
+  padding-top: 10px;
+  height:100%;
+}
+
+.selected{
+  opacity: 1;
+}
+
 .bubblechart {
+  padding-top: 10px;
   height:100%;
 }
 

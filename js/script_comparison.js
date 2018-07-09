@@ -57,11 +57,7 @@ function distinctCountries() {
 }
 
 function setCountriesLegend () {
-  array = []
-  for (i=0; i<distinctCountries().length; i++)
-    array.push(i)
-  array.sort(function(a, b){return 0.5 - Math.random()});
-
+  
   var countries = d3.select("#countries")
 
   var newGr = countries.selectAll("g")
@@ -73,7 +69,7 @@ function setCountriesLegend () {
   newGr.append("rect")
        .attr("width", "18px")
        .attr("height", "18px")
-       .attr("fill", function(d, i) { return colorScale(array[i]); })
+       .attr("fill", function(d, i) { return colorScale(i); })
        .attr("opacity", 0.2)
        .attr("id", function(d, i){ return "r"+i })
 
@@ -85,7 +81,7 @@ function setCountriesLegend () {
       .on("click", function(d, i){
         d3.select("#r"+i).classed("selected", !d3.select("#r"+i).classed("selected"))
         if (d3.select("#r"+i).classed("selected"))
-          addLine(d, array[i])
+          addLine(d, i)
         else
           removeLine(d)
       })

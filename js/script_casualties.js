@@ -41,13 +41,85 @@ window.onload = () => {
                     .domain([0,distinctCountries().length-1])
 
       createBubbleChart();
-      //setCountriesLegend();
+      setCountriesLegend();
     });
 }
 ////////////////////////////  END LOAD & INITIALISATION  ////////////////////////////
 
 function distinctCountries() {
   return d3.map(WWII_casualties, function(d) { return d.COUNTRY; }).keys()
+}
+
+function setCountriesLegend() {
+
+  var radius;
+  var country;
+
+  var legend = d3.select("#legend")
+
+  var tooltip = d3.select("#my_tooltip")
+  	.attr("class", "tooltip")
+  	.style("opacity", 0);
+
+  var newGr = legend.selectAll("g")
+                        .data(distinctCountries())
+                        .enter()
+                        .append("g")
+                        .attr("transform", function(d,i) { return "translate(0,"+i*20+")" })
+
+  newGr.append("rect")
+       .attr("width", "18px")
+       .attr("height", "18px")
+       .attr("fill", function(d, i) { return colorScale(i); })
+       .attr("opacity", 0.2)
+       .attr("id", function(d, i){ return "r"+i })
+
+  newGr.append("text")
+      .attr("x", 30)
+      .attr("dy", "1.05em")
+      .text(function(d) { return d })
+      .attr("cursor", "pointer")
+      .on("click", function(d, i){
+
+        var id = d.replace(" ", "")
+
+        d3.selectAll(".selected").classed("selected", false)
+        d3.select("#rects").selectAll("g").remove()
+        d3.select("#r"+i).classed("selected", true)
+        d3.select("#"+id).classed("selected", true)
+
+        fillStack(d, i);
+      })
+      .on("mouseover", function(d,i) {
+
+                        country = d3.select("#"+d.replace(" ", ""))
+
+                        radius = country.select("circle").attr("r")
+
+                        country.select("circle").transition(1000)
+                                                .attr("opacity", 1) // va al g
+                                                .attr("r", 70)
+
+                        //tooltip.transition().duration(200).style("opacity", 1);
+
+                        //tooltip.style("left", x+"px")
+                               //.style("top", y+"px")
+
+                        //country.attr("transform",function(d,i) { return "translate(0,"+i*20+")" })
+
+
+
+
+
+                      })
+      .on("mouseout", function(d) {
+                        country.select("circle").transition(1000)
+                                                .attr("opacity", 0.3)
+                                                .attr("r", radius)
+                        //d3.select("#big-circle").selectAll("*").remove()
+                        //tooltip.transition().duration(200).style("opacity", 0);
+                      })
+
 }
 
 
@@ -93,15 +165,22 @@ function createBubbleChart() {
                 .enter()
                 .filter(function(d) { return !d.children })
                 .append("g")
+                .attr("id", function(d){ return d.data.name.replace(" ", "")})
+                .attr("opacity", 0.3)
                 .attr("transform", function(d) { return "translate("+d.x+","+d.y+")"; })
                 .on("click", function (d, i) {
+
                   d3.select("#rects").selectAll("g").remove()
+                  d3.selectAll(".selected").classed("selected", false)
+                  d3.select(this).classed("selected", true)
+                  d3.select("#r"+i).classed("selected", true)
+
                   fillStack(d.data.name, i);
                 });
 
   node.append("circle")
       .attr("r", function(d) { return d.r; })
-      .attr("fill", function(d,i) { return colorScale(i); });
+      .attr("fill", function(d,i) { return colorScale(i); })
 
   node.append("text")
       .text(function(d) { return d.data.name; })
