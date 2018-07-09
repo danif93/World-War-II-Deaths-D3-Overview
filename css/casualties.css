@@ -23,6 +23,22 @@
   stroke: white
 }
 
+.tooltip {
+  text-anchor: middle;
+  font-family: sans-serif;
+  fill: white;
+  position: absolute;
+  line-height: .7;
+  padding: 8px;
+  background: rgba(190, 190, 190, 0.8);
+  color: #fff;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  pointer-events: none;
+  display: inline;
+}
+
 /**********************  STACKED BARCHART  **********************/
 .stackchart {
   height: 55%;
