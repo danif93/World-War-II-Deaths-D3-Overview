@@ -2,6 +2,7 @@ var WWII_casualties;
 var warYear = [];
 var bubbleBounds = d3.select("#bubble").node().getBoundingClientRect();
 var stackBounds = d3.select("#stack").node().getBoundingClientRect();
+var sunburstBounds = d3.select("#sunburst").node().getBoundingClientRect();
 
 var xpad = 40;
 var ypad = 40;
@@ -42,6 +43,9 @@ window.onload = () => {
 
       createBubbleChart();
       //setCountriesLegend();
+
+      //createSunburst()
+
     });
 }
 ////////////////////////////  END LOAD & INITIALISATION  ////////////////////////////
@@ -95,8 +99,13 @@ function createBubbleChart() {
                 .append("g")
                 .attr("transform", function(d) { return "translate("+d.x+","+d.y+")"; })
                 .on("click", function (d, i) {
+                  [yearList, dictDeathRatio] = getYearsDeathRatio(d.data.name)
                   d3.select("#rects").selectAll("g").remove()
-                  fillStack(d.data.name, i);
+                  d3.select("#chart").selectAll("path").remove()
+                  console.log(yearList);
+                  console.log(dictDeathRatio);
+                  fillStack(yearList, i);
+                  fillSunburst(dictDeathRatio, i);
                 });
 
   node.append("circle")
@@ -138,11 +147,9 @@ function dictParseCSV (/*year*/) {
   return dictList;
 }
 
-function fillStack(state, i) {
+function fillStack(yearList, i) {
 
-  var yearsRatio = getYearsDeathRatio(state);
-
-  var maxRatio = d3.max(yearsRatio, function(dict) { return dict.civilian+dict.military; })
+  var maxRatio = d3.max(yearList, function(dict) { return dict.civilian+dict.military; })
   yScale = yScale.domain([0, maxRatio+(0.1*maxRatio)]);
   d3.select("#yAxis")
     .transition().duration(1000)
@@ -151,7 +158,7 @@ function fillStack(state, i) {
   var svgR = d3.select("#rects");
 
   var newGr = svgR.selectAll("g")
-                  .data(yearsRatio)
+                  .data(yearList)
                   .enter()
                   .append("g")
                   .attr("transform", function(d) {
@@ -175,12 +182,55 @@ function fillStack(state, i) {
       .style("opacity", 0)
       .transition().duration(1000)
       .style("opacity", 1)
+}
 
+function fillSunburst(dictDeathRatio, i) {
 
+  // Variables
+  var width = sunburstBounds.width;
+  var height = sunburstBounds.height;
+  var radius = Math.min(width, height) / 2;
+  var color = d3.scaleOrdinal(d3.schemeCategory20b);
+
+  // Create primary <g> element
+  var g = d3.select('#sunburst')
+      .select("#chart")
+      .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+
+  // Data strucure
+  var partition = d3.partition()
+      .size([2 * Math.PI, radius]);
+
+  // Find data root
+  var root = d3.hierarchy(dictDeathRatio)
+      .sum(function (d) { return d.size});
+
+  // Size arcs
+  partition(root);
+  var arc = d3.arc()
+      .startAngle(function (d) { return d.x0; })
+      .endAngle(function (d) { return d.x1; })
+      .innerRadius(function (d) { return d.y0; })
+      .outerRadius(function (d) { return d.y1; });
+
+  // Put it all together
+  g.selectAll('path')
+      .data(root.descendants())
+      .enter().append('path')
+      .attr("display", function (d) { return d.depth ? null : "none"; })
+      .attr("d", arc)
+      .attr("fill", colorScale(i))
+      .attr("opacity", function (d) { return ((d.children ? d : d.parent).data.name)=="Civilian"? 0.5 : 1; });
 }
 
 function getYearsDeathRatio(state) {
-  var yearList = []
+  var dictDeathRatio = {
+      "name": state, "children": [{
+          "name": "Civilian",
+          "children": [{"name": "Population", "size": 0}, {"name": "Jews", "size": 0}]
+      }, { "name": "Military", "size": 0 }]};
+
+  var yearList = [];
   warYear.forEach(function(yr) { yearList.push({"year":yr, "civilian":0, "military": 0}); })
 
   WWII_casualties.forEach(function(d) {
@@ -197,7 +247,10 @@ function getYearsDeathRatio(state) {
         })
         startYear++;
       }
+      if (d.TAGS=="holocaust-jewish")   dictDeathRatio["children"][0]["children"][1]["size"] += +d.DEATHSFINAL
+      else                              dictDeathRatio["children"][0]["children"][0]["size"] += +d.DEATHSFINAL
+      dictDeathRatio["children"][1]["size"] += (+d.DEATHSFINAL)*(1-(+d.CIVILIANRATE))
     }
   })
-  return yearList;
+  return [yearList, dictDeathRatio];
 }

@@ -31,5 +31,7 @@
 /**********************  SUNBUSRST  **********************/
 .sunburst {
   height: 45%;
-  background-color: blue;
+}
+.sunburst path {
+  stroke: #fff;
 }
