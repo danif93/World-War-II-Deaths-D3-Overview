@@ -5,7 +5,7 @@ var xScale
 
 var drag = d3.drag()
     .on("drag", function() { dragmove(this, d3.select('#drag')); })
-    .on('end', function() { dragend(this, d3.select('#drag')); });
+    .on("end", function() { dragend(this, d3.select('#drag')); });
 
 var timeLineBounds = d3.select("#timeline").node().getBoundingClientRect()
 

@@ -32,26 +32,20 @@
 	</header>
 
 	<div class="btn-group btn-group-justified">
-		<a role="button" class="btn btn-default" href="index.html"> Map </a>
-		<a role="button" class="btn my-btn" href="casualties.html"> Casualties </a>
-		<a role="button" class="btn btn-default" href="comparison.html"> Comparison </a>
+		<a role="button" class="btn btn-default" href="index.html">War Evolution</a>
+		<a role="button" class="btn my-btn" href="casualties.html">Casualties by Country</a>
+		<a role="button" class="btn btn-default" href="comparison.html">Casualties Comparison</a>
 	</div>
 
   <div class="page_container" class="col-sm-12 col-md-12">
 
 		<div class="bubblechart-container col-sm-12 col-md-8">
-
-			<svg id="legend" class="legend col-sm-2 col-md-2"></svg>
-			<svg id="bubble" class="bubblechart col-sm-10 col-md-10"></svg>
-
-			<div id="my_tooltip" class="tooltip">
-				<svg id="big-circle"></svg>
-			</div>
-
+			<svg id="countries-legend" class="countries-legend col-sm-3 col-md-3"></svg>
+			<svg id="bubble" class="bubblechart col-sm-9 col-md-9"></svg>
 		</div>
 
-
 		<div class="stack_pie col-sm-12 col-md-4">
+			<div id="title" class="title col-sm-12 col-md-12">Select a country</div>
       <svg id="stack" class="stackchart col-sm-12">
 				<g id="xAxis"></g>
 				<g id="yAxis"></g>
@@ -59,7 +53,7 @@
 			</svg>
 			<svg id="sunburst" class="sunburst col-sm-12">
 				<g id="chart"></g>
-				<text id="percentage"></text>
+				<g id="percentage" class="perc"></g>
 			</svg>
     </div>
   </div>

@@ -1,1 +1,0 @@
-1. (casualties) when selected with legend, the opacity goes to 0.3 anyway;
