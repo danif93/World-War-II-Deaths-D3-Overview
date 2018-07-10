@@ -300,11 +300,11 @@ function fillSunburst(dictDeathRatio, idx) {
 
   var width = sunburstBounds.width;
   var height = sunburstBounds.height;
-  var radius = Math.min(width-xpad, height-ypad) / 2;
+  var radius = Math.min(width-xpad, height-ypad)/2;
 
   var g = d3.select('#sunburst')
       .select("#chart")
-      .attr('transform', 'translate(' + (width-xpad)/2 + ',' + (height-ypad)/2 + ')');
+      .attr('transform', 'translate('+(width-xpad)/2+','+(height-ypad)/2+')');
 
   // Data strucure
   var partition = d3.partition()

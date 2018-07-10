@@ -81,48 +81,46 @@ function setTimeLine() {
               .domain([pad, timeLineBounds.width-pad])
 
   svg.select("#xAxis")
+
             .attr("transform", "translate(0,"+(timeLineBounds.height/5)+")")
-            .transition().duration(1000)
             .call(d3.axisBottom(xScale))
+  svg.select("#xAxis")
             .selectAll("text")
-            .attr("cursor", "pointer")
             .attr("y", 0)
             .attr("x", 25)
-            .attr("dy", "-.2em")
-            .attr("transform", "rotate(90)");
+            .attr("transform", "rotate(90)")
+            .on("click", function(d){
+                          xScale = d3.scaleBand()
+                                      .range([pad, timeLineBounds.width-pad])
+                                      .domain(months_list)
 
-    svg.select("#xAxis").selectAll("text").on("click", function(d){
-                                              xScale = d3.scaleBand()
-                                                          .range([pad, timeLineBounds.width-pad])
-                                                          .domain(months_list)
+                          var arr = d.split(" ");
+                          var date = monthMap[arr[0]]+"19"+arr[1];
+                          var list_events_inside = []
+                          var list_events_outside = []
 
-                                              var arr = d.split(" ");
-                                              var date = monthMap[arr[0]]+"19"+arr[1];
-                                              var list_events_inside = []
-                                              var list_events_outside = []
+                          events.forEach(function(ev){
+                            if (ev.DATE == date) {
+                              if (ev.event_pos[0] != 0)
+                                list_events_inside.push(ev)
+                              else
+                                list_events_outside.push(ev)
+                            }
+                          })
 
-                                              events.forEach(function(ev){
-                                                if (ev.DATE == date) {
-                                                  if (ev.event_pos[0] != 0)
-                                                    list_events_inside.push(ev)
-                                                  else
-                                                    list_events_outside.push(ev)
-                                                }
-                                              })
+                          d3.select("#drag")
+                            .transition()
+                            .duration(1000)
+                            .attr("x", xScale(d))
 
-                                              d3.select("#drag")
-                                                .transition()
-                                                .duration(1000)
-                                                .attr("x", xScale(d)+xScale.bandwidth()/2)
+                          loadMap(date);
 
-                                              loadMap(date);
-
-                                              updateOutEvents(list_events_outside);
-                                              updateEventMap(list_events_inside);
-                                            })
+                          updateOutEvents(list_events_outside);
+                          updateEventMap(list_events_inside);
+                        })
 
   var dragrect = svg.select("#drag")
-      .attr("x", pad+xScale.bandwidth()/2)
+      .attr("x", pad)
       .attr("y", 0)
       .attr("height", timeLineBounds.height/3)
       .attr("width", xScale.bandwidth())

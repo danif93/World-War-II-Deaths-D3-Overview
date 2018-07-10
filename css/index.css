@@ -86,6 +86,8 @@ li p {
 
 .timeline text{
   font-size: 10px;
+  cursor: pointer;
+  alignment-baseline: after-edge;
 }
 
 .draggable {
