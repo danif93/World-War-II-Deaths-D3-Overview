@@ -16,6 +16,10 @@ var LineGenerator = d3.line()
 var stateDeaths = {};
 var currentMaxDeaths = 0;
 
+function kFormatter(num) {
+  return num > 999 ? (num/1000).toFixed(1) + 'k' : parseInt(num)
+}
+
 ////////////////////////////  LOAD FILE & INTIALISE SVG  ////////////////////////////
 window.onload = () => {
   d3.csv("../datasets/warMonths.csv", function (error, csv_year) {
@@ -57,7 +61,7 @@ function distinctCountries() {
 }
 
 function setCountriesLegend () {
-  
+
   var countries = d3.select("#countries")
 
   var newGr = countries.selectAll("g")
@@ -81,9 +85,9 @@ function setCountriesLegend () {
       .on("click", function(d, i){
         d3.select("#r"+i).classed("selected", !d3.select("#r"+i).classed("selected"))
         if (d3.select("#r"+i).classed("selected"))
-          addLine(d, i)
+          addInfo(d, i)
         else
-          removeLine(d)
+          removeInfo(d)
       })
 }
 
@@ -121,7 +125,7 @@ function getStateDeaths(state) {
 
   var index = 0
 
-  months_list.forEach(function(m) { avgDeath_list.push({"month":m, "deaths":0}) })
+  months_list.forEach(function(m) { avgDeath_list.push({"month":m, "deaths":0, "civ":0, "mil":0}) })
 
   WWII_casualties.forEach(function(d) {
     if (d.COUNTRY == state /*&& d.TAGS != "air-firebomb"*/) {
@@ -150,6 +154,9 @@ function getStateDeaths(state) {
         avgDeath_list.forEach(function(dict){
           if (dict.month == months[String(month)]+" "+String(year)) {
             dict.deaths += +d.DEATHSFINAL/count_month
+            dict.civ += (+d.DEATHSFINAL/count_month)*(+d.CIVILIANRATE)
+            dict.mil += +d.DEATHSFINAL/count_month*(1-(+d.CIVILIANRATE))
+
             if (dict.deaths > maxDeathValue) maxDeathValue = dict.deaths
           }
         })
@@ -164,7 +171,7 @@ function getStateDeaths(state) {
   return [avgDeath_list, maxDeathValue];
 }
 
-function addLine(state, colorIdx){
+function addInfo(state, colorIdx){
   [avgDeaths_list, maxDeathValue] = getStateDeaths(state)
 
   if (maxDeathValue > currentMaxDeaths) {
@@ -175,18 +182,49 @@ function addLine(state, colorIdx){
   stateDeaths[state] = [avgDeaths_list, maxDeathValue]
 
   d3.select("#lines").append("path")
-                    .attr("id", state.replace(" ", ""))
+                    .attr("id", "l"+state.replace(" ", ""))
                     .attr("stroke", colorScale(colorIdx))
                     .attr("d", LineGenerator(avgDeaths_list))
                     .attr("opacity", 0)
                     .transition().duration(1000)
                     .attr("opacity", 1)
+
+  d3.select("#points").append("g")
+      .attr("id", "c"+state.replace(" ", ""))
+      .selectAll("circle")
+      .data(avgDeaths_list).enter()
+      .append("circle")
+      .attr("cx", function(d) { return xScale(d.month); })
+      .attr("cy", function(d) { return yScale(d.deaths); })
+      .attr("r", xScale.bandwidth()/2)
+      .attr("fill", colorScale(colorIdx))
+      .on("mouseover", function(d){
+                        var x = d3.event.pageX
+                        var y = d3.event.pageY
+                        d3.select("#tooltip").transition().duration(200).style("opacity", 1);
+                        d3.select("#tooltip")
+                                .html("<h4 style='color:"+colorScale(colorIdx)+"'><b><i>"+state+"</i></b></h4>"+
+                                      "<h5>Period: <i>"+d.month+"</i></h5>"+
+                                      "<h5>Total Deaths: <i>"+kFormatter(d.deaths)+"</i></h5>"+
+                                      "<h6 style='padding-left:10px;'>Civilian Deaths: <i>"+kFormatter(d.civ)+"</i></h6>"+
+                                      "<h6 style='padding-left:10px;'>Military Deaths: <i>"+kFormatter(d.mil)+"</i></h6>")
+                                .style("left", (x-d3.select("#tooltip").node().getBoundingClientRect().width)+"px")
+                                .style("top", (y-d3.select("#tooltip").node().getBoundingClientRect().height)+"px")
+
+      })
+      .on("mouseout", function(d){
+                        d3.select("#tooltip").transition().duration(200).style("opacity", 0);
+      })
+
 }
 
-function removeLine(state){
-  d3.select("#lines").select("#"+state.replace(" ", ""))
+function removeInfo(state){
+  d3.select("#lines").select("#l"+state.replace(" ", ""))
     .transition().duration(1000)
     .attr("opacity", 0)
+    .remove()
+
+  d3.select("#points").select("#c"+state.replace(" ", ""))
     .remove()
 
   var delStateDeath = stateDeaths[state][1]
@@ -210,8 +248,13 @@ function rescaleLinechart() {
                         .call(d3.axisLeft(yScale));
 
   Object.keys(stateDeaths).forEach(function(s){
-    d3.select("#lines").select("#"+s.replace(" ", ""))
-    .transition().duration(1000)
-    .attr("d", LineGenerator(stateDeaths[s][0]))
+    d3.select("#lines").select("#l"+s.replace(" ", ""))
+      .transition().duration(1000)
+      .attr("d", LineGenerator(stateDeaths[s][0]))
+
+    d3.select("#points").select("#c"+s.replace(" ", ""))
+      .selectAll("circle")
+      .transition().duration(1000)
+      .attr("cy", function(d){ return yScale(d.deaths); })
   })
 }

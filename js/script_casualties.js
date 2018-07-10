@@ -13,6 +13,10 @@ var yScale = d3.scaleLinear()
                 .domain([0, 1000000])
                 .range([stackBounds.height-ypad, ypad]);
 
+function kFormatter(num) {
+  return num > 999 ? (num/1000).toFixed(1) + 'k' : num
+}
+
 ////////////////////////////  LOAD FILE & INTIALISE SVG  ////////////////////////////
 window.onload = () => {
   d3.csv("../datasets/warMonths.csv", function (error, csv_year) {
@@ -293,10 +297,6 @@ function fillStack(yearList, i) {
 }
 
 function fillSunburst(dictDeathRatio, idx) {
-
-  function kFormatter(num) {
-    return num > 999 ? (num/1000).toFixed(1) + 'k' : num
-  }
 
   var width = sunburstBounds.width;
   var height = sunburstBounds.height;

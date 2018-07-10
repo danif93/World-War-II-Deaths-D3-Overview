@@ -17,6 +17,11 @@
   stroke-width: 1.5px;
 }
 
+.points {
+  opacity: 0;
+  cursor: help;
+}
+
 svg .grid line {
   stroke: lightgray;
   stroke-width: 0.7px;
@@ -25,4 +30,17 @@ svg .grid line {
 
 svg #xAxis {
   text-anchor: start;
+}
+
+.tooltip {
+  position: absolute;
+  line-height: .7;
+  padding: 8px;
+  background: rgba(100, 100, 100, 0.7);
+  color: #fff;
+  font: 10px sans-serif;
+  border-radius: 4px;
+  pointer-events: none;
+  display: inline;
+  opacity: 0;
 }

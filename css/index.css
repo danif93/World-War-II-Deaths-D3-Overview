@@ -52,6 +52,7 @@
   border-radius: 4px;
   pointer-events: none;
   display: inline;
+  opacity: 0;
 }
 
 /**************** OUTER EVENTS ****************/
@@ -88,6 +89,6 @@ li p {
 }
 
 .draggable {
-  cursor: move;
+  cursor: ew-resize;
   fill : #BDBDBD
 }

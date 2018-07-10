@@ -1,7 +1,10 @@
+var monthMap = {"Jan":"January_","Feb":"February_","Mar":"March_","Apr":"April_","May":"May_","Jun":"June_",
+                "Jul":"July_","Aug":"August_","Sep":"September_","Oct":"October_","Nov":"November_","Dec":"December_"}
 var months_list = [];
 var events;
 var pad = 20;
-var xScale
+var xScale;
+var invXScale;
 
 var drag = d3.drag()
     .on("drag", function() { dragmove(this, d3.select('#drag')); })
@@ -73,26 +76,56 @@ function setTimeLine() {
   xScale = d3.scaleBand()
               .range([pad, timeLineBounds.width-pad])
               .domain(months_list)
+  invXScale = d3.scaleQuantize()
+              .range(warMonths)
+              .domain([pad, timeLineBounds.width-pad])
 
   svg.select("#xAxis")
             .attr("transform", "translate(0,"+(timeLineBounds.height/5)+")")
             .transition().duration(1000)
             .call(d3.axisBottom(xScale))
             .selectAll("text")
+            .attr("cursor", "pointer")
             .attr("y", 0)
             .attr("x", 25)
             .attr("dy", "-.2em")
-            .attr("transform", "rotate(90)")
+            .attr("transform", "rotate(90)");
+
+    svg.select("#xAxis").selectAll("text").on("click", function(d){
+                                              xScale = d3.scaleBand()
+                                                          .range([pad, timeLineBounds.width-pad])
+                                                          .domain(months_list)
+
+                                              var arr = d.split(" ");
+                                              var date = monthMap[arr[0]]+"19"+arr[1];
+                                              var list_events_inside = []
+                                              var list_events_outside = []
+
+                                              events.forEach(function(ev){
+                                                if (ev.DATE == date) {
+                                                  if (ev.event_pos[0] != 0)
+                                                    list_events_inside.push(ev)
+                                                  else
+                                                    list_events_outside.push(ev)
+                                                }
+                                              })
+
+                                              d3.select("#drag")
+                                                .transition()
+                                                .duration(1000)
+                                                .attr("x", xScale(d)+xScale.bandwidth()/2)
+
+                                              loadMap(date);
+
+                                              updateOutEvents(list_events_outside);
+                                              updateEventMap(list_events_inside);
+                                            })
 
   var dragrect = svg.select("#drag")
-      .attr("x", pad+5)
+      .attr("x", pad+xScale.bandwidth()/2)
       .attr("y", 0)
       .attr("height", timeLineBounds.height/3)
       .attr("width", xScale.bandwidth())
-
-  xScale = d3.scaleQuantize()
-              .range(warMonths)
-              .domain([pad, timeLineBounds.width-pad])
 
   dragrect.call(drag);
 }
@@ -102,7 +135,8 @@ function dragmove(d, elem) {
 }
 
 function dragend(d, elem){
-  var dateDict = xScale(elem.attr('x'))
+
+  var dateDict = invXScale(elem.attr('x'))
   var date = dateDict.MONTHS+"_"+dateDict.YEAR
 
   var list_events_inside = []
@@ -157,10 +191,6 @@ function updateEventMap(list_events) {
 
   clearPoints();
 
-  var tooltip = d3.select("#my_tooltip")
-  	.attr("class", "tooltip")
-  	.style("opacity", 0);
-
   list_events.forEach(function(ev){
 
     var point_pos = ev.event_pos;
@@ -179,15 +209,15 @@ function updateEventMap(list_events) {
 
                           d3.select(this).attr("r", 9)
 
-                          tooltip.transition().duration(200).style("opacity", 1);
+                          d3.select("#tooltip").transition().duration(200).style("opacity", 1);
 
-                          tooltip.style("left", (x+10)+"px")
+                          d3.select("#tooltip").style("left", (x+15)+"px")
                                  .style("top", y+"px")
                                  .html("<h4><i>"+ ev.SUMMARY + "</i></h4>" + ev.DETAILED_INFORMATION)
                           })
           .on("mouseout", function(d) {
                           d3.select(this).attr("r", 6)
-                          tooltip.transition().duration(200).style("opacity", 0);
+                          d3.select("#tooltip").transition().duration(200).style("opacity", 0);
                           })
   })
 }
