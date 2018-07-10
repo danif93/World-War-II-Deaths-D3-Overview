@@ -226,9 +226,8 @@ function dictParseCSV (/*year*/) {
 function setCountryInfo(state, idx) {
   [yearList, dictDeathRatio] = getYearsDeathRatio(state)
 
-  var info = d3.select("#stack");
-
-  info.selectAll("g:not([id])").remove();
+  var info = d3.select("#stack").select("#stack-legend");
+  info.selectAll("g").remove();
   d3.select("#title").html(state);
 
   var milG = info.append("g").attr("transform", "translate("+stackBounds.width/5+","+stackBounds.height/100+")");;
@@ -346,7 +345,7 @@ function fillSunburst(dictDeathRatio, idx) {
                       g.attr('transform', 'translate('+(((width-xpad)/2)-(g.node().getBBox().width/2))+','+(((height-ypad)/2)-(g.node().getBBox().height/3))+')')
                       })
       .on("mouseout", function(d) {
-        d3.select("#percentage").selectAll("text").remove()
+                      d3.select("#percentage").selectAll("text").remove()
       })
       .attr("display", function (d) { return d.depth ? null : "none"; })
       .transition()
