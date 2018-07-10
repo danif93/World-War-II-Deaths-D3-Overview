@@ -119,13 +119,13 @@ function createLineChart(){
     .attr("y2", svgBounds.height-ypad)
 }
 
-function getStateDeaths(state) {
-  var avgDeath_list = [];
+function getStateDeaths(state, colorIdx) {
+  var avgDeaths_list = [];
   var maxDeathValue = 0
 
   var index = 0
 
-  months_list.forEach(function(m) { avgDeath_list.push({"month":m, "deaths":0, "civ":0, "mil":0}) })
+  months_list.forEach(function(m) { avgDeaths_list.push({"month":m, "deaths":0, "civ":0, "mil":0, "state":state, "color":colorIdx}) })
 
   WWII_casualties.forEach(function(d) {
     if (d.COUNTRY == state /*&& d.TAGS != "air-firebomb"*/) {
@@ -151,7 +151,7 @@ function getStateDeaths(state) {
       var year = parseInt(split_startdate[3])
 
       for (i=0; i<count_month; i++) {
-        avgDeath_list.forEach(function(dict){
+        avgDeaths_list.forEach(function(dict){
           if (dict.month == months[String(month)]+" "+String(year)) {
             dict.deaths += +d.DEATHSFINAL/count_month
             dict.civ += (+d.DEATHSFINAL/count_month)*(+d.CIVILIANRATE)
@@ -168,11 +168,12 @@ function getStateDeaths(state) {
       }
     }
   })
-  return [avgDeath_list, maxDeathValue];
+  return [avgDeaths_list, maxDeathValue];
 }
 
 function addInfo(state, colorIdx){
-  [avgDeaths_list, maxDeathValue] = getStateDeaths(state)
+  [avgDeaths_list, maxDeathValue] = getStateDeaths(state, colorIdx)
+
 
   if (maxDeathValue > currentMaxDeaths) {
      currentMaxDeaths = maxDeathValue
@@ -196,26 +197,32 @@ function addInfo(state, colorIdx){
       .append("circle")
       .attr("cx", function(d) { return xScale(d.month); })
       .attr("cy", function(d) { return yScale(d.deaths); })
+      .attr("id", "c"+state)
       .attr("r", xScale.bandwidth()/2)
       .attr("fill", colorScale(colorIdx))
-      .on("mouseover", function(d){
+      .on("mouseover", function() {
                         var x = d3.event.pageX
                         var y = d3.event.pageY
-                        d3.select("#tooltip").transition().duration(200).style("opacity", 1);
-                        d3.select("#tooltip")
-                                .html("<h4 style='color:"+colorScale(colorIdx)+"'><b><i>"+state+"</i></b></h4>"+
-                                      "<h5>Period: <i>"+d.month+"</i></h5>"+
-                                      "<h5>Total Deaths: <i>"+kFormatter(d.deaths)+"</i></h5>"+
-                                      "<h6 style='padding-left:10px;'>Civilian Deaths: <i>"+kFormatter(d.civ)+"</i></h6>"+
-                                      "<h6 style='padding-left:10px;'>Military Deaths: <i>"+kFormatter(d.mil)+"</i></h6>")
-                                .style("left", (x-d3.select("#tooltip").node().getBoundingClientRect().width)+"px")
-                                .style("top", (y-d3.select("#tooltip").node().getBoundingClientRect().height)+"px")
+                        var elems = d3.selectAll(document.elementsFromPoint(d3.event.x, d3.event.y)).filter("circle")
+                        var tt = d3.select("#tooltip")
 
-      })
+                        elems._groups[0].forEach(function(c){
+                          tt.append("li")
+                            .html("<h4 style='color:"+colorScale(c.__data__.color)+"'><b><i>"+c.__data__.state+"</i></b></h4>"+
+                                  "<h5>Period: <i>"+c.__data__.month+"</i></h5>"+
+                                  "<h5>Total Deaths: <i>"+kFormatter(c.__data__.deaths)+"</i></h5>"+
+                                  "<h6 style='padding-left:10px;'>Civilian Deaths: <i>"+kFormatter(c.__data__.civ)+"</i></h6>"+
+                                  "<h6 style='padding-left:10px;'>Military Deaths: <i>"+kFormatter(c.__data__.mil)+"</i></h6>")
+                        })
+                        tt.style("left", (x-d3.select("#tooltip").node().getBoundingClientRect().width)+"px")
+                          .style("top", (y-d3.select("#tooltip").node().getBoundingClientRect().height)+"px")
+
+                        tt.transition().duration(500).style("opacity", 1);
+                      })
       .on("mouseout", function(d){
-                        d3.select("#tooltip").transition().duration(200).style("opacity", 0);
-      })
-
+                        d3.select("#tooltip").style("opacity", 0);
+                        d3.select("#tooltip").selectAll("li").remove()
+                      })  
 }
 
 function removeInfo(state){
