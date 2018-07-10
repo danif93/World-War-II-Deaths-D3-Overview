@@ -14,7 +14,7 @@ var yScale = d3.scaleLinear()
                 .range([stackBounds.height-ypad, ypad]);
 
 function kFormatter(num) {
-  return num > 999 ? (num/1000).toFixed(1) + 'k' : num
+  return num > 999 ? (num/1000).toFixed(1) + 'k' : parseInt(num)
 }
 
 ////////////////////////////  LOAD FILE & INTIALISE SVG  ////////////////////////////
@@ -242,6 +242,7 @@ function setCountryInfo(state, idx) {
   milG.append("text")
       .attr("x", 30)
       .attr("dy", "1.05em")
+      .classed("selected", true)
       .text("Military")
 
   var civG = info.append("g").attr("transform", "translate("+stackBounds.width/1.7+","+stackBounds.height/100+")");
@@ -273,6 +274,21 @@ function fillStack(yearList, i) {
                   .data(yearList)
                   .enter()
                   .append("g")
+                  .on("mouseover", function(d) {
+                                    var x = d3.event.pageX
+                                    var y = d3.event.pageY
+                                    var tt = d3.select("#tooltip")
+                                    tt.html("<h4><b><i>"+d.year+"</i></b></h4>"+
+                                              "<h5>Total Deaths: <i>"+kFormatter(d.total)+"</i></h5>"+
+                                              "<h6 style='padding-left:10px;'>Civilian Deaths: <i>"+kFormatter(d.civilian)+"</i></h6>"+
+                                              "<h6 style='padding-left:10px;'>Military Deaths: <i>"+kFormatter(d.military)+"</i></h6>")
+                                      .style("left", (x-d3.select("#tooltip").node().getBoundingClientRect().width)+"px")
+                                      .style("top", (y-d3.select("#tooltip").node().getBoundingClientRect().height)+"px")
+                                      .transition().duration(200).style("opacity", 1);
+                                  })
+                  .on("mouseout", function(d){
+                                    d3.select("#tooltip").transition().duration(200).style("opacity", 0);
+                                  })
                   .attr("transform", function(d) {
                     return "translate("+xScale(d.year)+","+yScale(d.military+d.civilian)+")";
                   })
@@ -342,7 +358,7 @@ function fillSunburst(dictDeathRatio, idx) {
                       .text("of "+kFormatter(root.value))
                       .attr("dy", "2em");
 
-                      g.attr('transform', 'translate('+(((width-xpad)/2)-(g.node().getBBox().width/2))+','+(((height-ypad)/2)-(g.node().getBBox().height/3))+')')
+                      g.attr('transform', 'translate('+(((width-xpad)/2)-(g.node().getBBox().width/2))+','+(((height-ypad)/2)-(g.node().getBBox().height/4))+')')
                       })
       .on("mouseout", function(d) {
                       d3.select("#percentage").selectAll("text").remove()
@@ -364,7 +380,7 @@ function getYearsDeathRatio(state) {
       }, { "name": "Military", "size": 0 }]};
 
   var yearList = [];
-  warYear.forEach(function(yr) { yearList.push({"year":yr, "civilian":0, "military": 0}); })
+  warYear.forEach(function(yr) { yearList.push({"year":yr, "civilian":0, "military": 0, "total":0}); })
 
   WWII_casualties.forEach(function(d) {
     if (d.COUNTRY==state) {
@@ -376,6 +392,7 @@ function getYearsDeathRatio(state) {
           if (dict.year==startYear) {
             yearList[idx].civilian += ((+d.DEATHSFINAL)/year_count)*(+d.CIVILIANRATE)
             yearList[idx].military += ((+d.DEATHSFINAL)/year_count)*(1-(+d.CIVILIANRATE))
+            yearList[idx].total += (+d.DEATHSFINAL)/year_count
           }
         })
         startYear++;

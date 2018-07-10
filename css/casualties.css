@@ -50,10 +50,33 @@
   height: 45%;
 }
 
+text .selected {
+  font-weight: bold;
+}
+
+.stackchart #rects{
+  cursor: help;
+}
+
+.tooltip {
+  position: absolute;
+  line-height: .7;
+  font-weight: bold;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font: 10px sans-serif;
+  border-radius: 4px;
+  pointer-events: none;
+  display: inline;
+  opacity: 0;
+}
+
 /**********************  SUNBUSRST  **********************/
 .sunburst {
   height: 45%;
 }
 .sunburst path {
   stroke: #fff;
+  cursor: help;
 }
