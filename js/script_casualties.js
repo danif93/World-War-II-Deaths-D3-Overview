@@ -53,6 +53,12 @@ function distinctCountries() {
 
 function setCountriesLegend() {
 
+  d3.selection.prototype.moveToFront = function() {
+    return this.each(function(){
+      this.parentNode.appendChild(this);
+    });
+  };
+
   var selRadious;
   var selCountry;
 
@@ -101,6 +107,9 @@ function setCountriesLegend() {
                     selCountry.selectAll("text")
                       .transition().duration(1000)
                       .attr("font-size", 15)
+
+                    selCountry.moveToFront();
+
                   }
                   else
                     selCountry.select("circle")
@@ -108,7 +117,6 @@ function setCountriesLegend() {
                       .attr("opacity", 1)
                   })
       .on("mouseout", function(d) {
-
                   selCountry.select("circle")
                     .transition().duration(1000)
                     .attr("opacity", 0.3)
@@ -167,7 +175,7 @@ function createBubbleChart() {
       .attr("font-size", function(d) { return d.r/5; })
 
   node.append("text")
-      .attr("dy", "1em")
+      .attr("dy", "1.3em")
       .text(function(d) { return d.data.count; })
       .attr("font-size", function(d) { return d.r/5; })
 }
@@ -287,6 +295,10 @@ function fillStack(yearList, i) {
 
 function fillSunburst(dictDeathRatio, idx) {
 
+  function kFormatter(num) {
+    return num > 999 ? (num/1000).toFixed(1) + 'k' : num
+  }
+
   var width = sunburstBounds.width;
   var height = sunburstBounds.height;
   var radius = Math.min(width-xpad, height-ypad) / 2;
@@ -305,6 +317,7 @@ function fillSunburst(dictDeathRatio, idx) {
 
   // Size arcs
   partition(root);
+
   var arc = d3.arc()
       .startAngle(function (d) { return d.x0; })
       .endAngle(function (d) { return d.x1; })
@@ -324,15 +337,13 @@ function fillSunburst(dictDeathRatio, idx) {
 
                       g.append("text")
                       .text(((d.value*100)/root.value).toFixed(1)+"%")
-                      .attr("dy", "1em");
+                      .attr("dy", "1em")
 
                       g.append("text")
                       .text("of "+kFormatter(root.value))
                       .attr("dy", "2em");
 
                       g.attr('transform', 'translate('+(((width-xpad)/2)-(g.node().getBBox().width/2))+','+(((height-ypad)/2)-(g.node().getBBox().height/3))+')')
-                      //d3.select("#percentage").text(((d.value*100)/root.value).toFixed(1)+"%")
-                        //.attr('transform', 'translate('+(((width-xpad)/2)-(d3.select("#percentage").node().getComputedTextLength()/2))+','+(height-ypad)/2+')')
                       })
       .on("mouseout", function(d) {
         d3.select("#percentage").selectAll("text").remove()
@@ -345,10 +356,6 @@ function fillSunburst(dictDeathRatio, idx) {
       .attr("opacity", function (d) { return ((d.children? d:d.parent).data.name)=="Civilian"? 0.5:1; })
 
   }
-
-function kFormatter(num) {
-  return num > 999 ? (num/1000).toFixed(1) + 'k' : num
-}
 
 function getYearsDeathRatio(state) {
   var dictDeathRatio = {
@@ -374,8 +381,8 @@ function getYearsDeathRatio(state) {
         })
         startYear++;
       }
-      if (d.TAGS=="holocaust-jewish")   dictDeathRatio["children"][0]["children"][1]["size"] += +d.DEATHSFINAL
-      else                              dictDeathRatio["children"][0]["children"][0]["size"] += +d.DEATHSFINAL
+      if (d.TAGS=="holocaust-jewish")   dictDeathRatio["children"][0]["children"][1]["size"] += (+d.DEATHSFINAL*(+d.CIVILIANRATE))
+      else                              dictDeathRatio["children"][0]["children"][0]["size"] += (+d.DEATHSFINAL*(+d.CIVILIANRATE))
       dictDeathRatio["children"][1]["size"] += (+d.DEATHSFINAL)*(1-(+d.CIVILIANRATE))
     }
   })
