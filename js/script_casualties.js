@@ -1,5 +1,6 @@
 var WWII_casualties;
 var warYear = [];
+
 var bubbleBounds = d3.select("#bubble").node().getBoundingClientRect();
 var stackBounds = d3.select("#stack").node().getBoundingClientRect();
 var sunburstBounds = d3.select("#sunburst").node().getBoundingClientRect();
@@ -26,6 +27,8 @@ window.onload = () => {
       console.log(error);
 	    throw error;
     }
+
+    // we know that we have deaths only for all the periods starting from 1939
     warYear = d3.map(csv_year, function(d) { if(+d.YEAR > 1938) return d.YEAR; else return 1939; }).keys()
 
     xScale = d3.scaleBand()
@@ -59,30 +62,24 @@ function distinctCountries() {
 
 function setCountriesLegend() {
 
+  // append the selected node as last child of the parent element in order to have not overlapping elements on focus;
   d3.selection.prototype.moveToFront = function() {
     return this.each(function(){
       this.parentNode.appendChild(this);
     });
   };
 
-  var selRadious;
   var selCountry;
 
-  var legend = d3.select("#countries-legend")
-
-  var tooltip = d3.select("#my_tooltip")
-  	.attr("class", "tooltip")
-  	.style("opacity", 0);
+  var legend = d3.select("#countries-legend");
 
   var newGr = legend.selectAll("g")
-                        .data(distinctCountries())
-                        .enter()
-                        .append("g")
-                        .attr("transform", function(d,i) { return "translate(0,"+i*20+")" })
+                    .data(distinctCountries())
+                    .enter()
+                    .append("g")
+                    .attr("transform", function(d,i) { return "translate(0,"+i*20+")" })
 
   newGr.append("rect")
-       .attr("width", "18px")
-       .attr("height", "18px")
        .attr("fill", function(d, i) { return colorScale(i); })
        .attr("opacity", 0.2)
        .attr("id", function(d, i){ return "r"+i })
@@ -91,20 +88,22 @@ function setCountriesLegend() {
       .attr("x", 30)
       .attr("dy", "1.05em")
       .text(function(d) { return d })
-      .attr("cursor", "pointer")
       .on("click", function(d, i) {
-                  d3.select("#rects").selectAll("g").remove()
-                  d3.select("#chart").selectAll("path").remove()
+                  // new selection: clean stacked barchart and sunburst diagram
+                  d3.select("#stack").select("#rects").selectAll("g").remove()
+                  d3.select("#sunburst").select("#chart").selectAll("path").remove()
 
+                  // change the opacity for the new selection
                   d3.selectAll(".selected").classed("selected", false)
                   d3.select("#r"+i).classed("selected", true)
-                  d3.select("#"+d.replace(" ", "")).selectAll("circle").classed("selected", true)
+                  d3.select("#"+d.replace(" ", "")).select("circle").classed("selected", true)
 
                   setCountryInfo(d, i);
       })
       .on("mouseover", function(d,i) {
                   selCountry = d3.select("#"+d.replace(" ", ""))
 
+                  // resize the circle if its too small...
                   if (selCountry.select("circle").attr("r") < 70) {
                     selCountry.select("circle")
                       .transition().duration(1000)
@@ -117,12 +116,14 @@ function setCountriesLegend() {
                     selCountry.moveToFront();
 
                   }
+                  // ... otherwise just highlight it with opacity change
                   else
                     selCountry.select("circle")
                       .transition().duration(1000)
                       .attr("opacity", 1)
                   })
       .on("mouseout", function(d) {
+                  // restore the original attributes when out of focus
                   selCountry.select("circle")
                     .transition().duration(1000)
                     .attr("opacity", 0.3)
@@ -144,31 +145,32 @@ function createBubbleChart() {
 
   svg.call(zoom);
 
+  // define the bubblechart area and space between circles
   var bubble = d3.pack()
     .size([bubbleBounds.width-xpad, bubbleBounds.height-ypad])
     .padding(1.5);
 
-  var nodes = d3.hierarchy( {children: dictParseCSV()} )
-                .sum(function(d) { return d.count; });
+  // shallow tree: big bubble containing all the dataset (rendered circles, leaves)
+  var nodes = d3.hierarchy( {children: dictParseCSV()} ).sum(function(d) { return d.count; });
 
   var node = zoomable_layer.selectAll("g")
                 .data(bubble(nodes).descendants())
-                .enter()
-                .filter(function(d) { return !d.children })
+                .enter().filter(function(d) { return !d.children }) // render only the leaves (dataset)
                 .append("g")
-                .attr("id", function(d){ return d.data.name.replace(" ", "")})
+                .attr("id", function(d) { return d.data.name.replace(" ", "")})
                 .attr("transform", function(d) { return "translate("+d.x+","+d.y+")"; })
                 .on("click", function (d, i) {
+                              // new selection: clean stacked barchart and sunburst diagram
+                              d3.select("#stack").select("#rects").selectAll("g").remove()
+                              d3.select("#sunburst").select("#chart").selectAll("path").remove()
 
-                  d3.select("#rects").selectAll("g").remove()
-                  d3.select("#chart").selectAll("path").remove()
+                              // change the opacity for the new selection
+                              d3.selectAll(".selected").classed("selected", false)
+                              d3.select(this).select("circle").classed("selected", true)
+                              d3.select("#r"+i).classed("selected", true)
 
-                  d3.selectAll(".selected").classed("selected", false)
-                  d3.select(this).select("circle").classed("selected", true)
-                  d3.select("#r"+i).classed("selected", true)
-
-                  setCountryInfo(d.data.name, i);
-                });
+                              setCountryInfo(d.data.name, i);
+                            });
 
   node.append("circle")
       .attr("r", function(d) { return d.r; })
@@ -176,13 +178,13 @@ function createBubbleChart() {
       .attr("fill", function(d, i) { return colorScale(i); })
 
   node.append("text")
-      .text(function(d) { return d.data.name; })
       .attr("font-size", function(d) { return d.r/5; })
+      .text(function(d) { return d.data.name; })
 
   node.append("text")
-      .attr("dy", "1.3em")
-      .text(function(d) { return d.data.count; })
+      .attr("dy", "1em")
       .attr("font-size", function(d) { return d.r/5; })
+      .text(function(d) { return d.data.count; })
 }
 
 function createStackChart() {
@@ -204,22 +206,22 @@ function createStackChart() {
       .call(d3.axisLeft(yScale));
 }
 
-function dictParseCSV (/*year*/) {
+function dictParseCSV () {
   dictList = [];
   var state;
   var count;
   WWII_casualties.forEach(function(d) {
-    if (state) {
-      if (state==d.COUNTRY){
+    if (state) { // 2 round or more...
+      if (state==d.COUNTRY){  // current row refers to the same country of the previous one, keep adding...
         count += +d.DEATHSFINAL;
       }
-      else {
+      else { // current row refers to a new country, push the result and initialise
         dictList.push({"name":state, "count":count});
         state = d.COUNTRY;
         count = +d.DEATHSFINAL;
       }
     }
-    else {
+    else { // first round
       state = d.COUNTRY;
       count = +d.DEATHSFINAL;
     }
@@ -228,14 +230,37 @@ function dictParseCSV (/*year*/) {
   return dictList;
 }
 
-function setCountryInfo(state, idx) {
+function setCountryInfo(state, idx) { // fill both the stacked barchart and the sunburst diagram
+  // [0]: stacked barchart dataset
+  // [1]: sunburst diagram dataset
   [yearList, dictDeathRatio] = getYearsDeathRatio(state)
 
   var info = d3.select("#stack").select("#stack-legend");
+  // clear old legend
   info.selectAll("g").remove();
-  d3.select("#title").html(state);
 
-  var milG = info.append("g").attr("transform", "translate("+stackBounds.width/5+","+stackBounds.height/50+")");;
+  // fill the legend with the new info
+  d3.select("#title").html(state);
+  var milG = info.append("g")
+                  .attr("transform", "translate("+stackBounds.width/5+","+stackBounds.height/50+")")
+                  .on("click", function() { // when military is selected...
+                    var rects = d3.select("#stack").select("#rects");
+                    // ... clear civilian focus...
+                    info.selectAll("text").classed("selected", false);
+                    info.selectAll(".selected-container").classed("selected-container", false);
+                    // ... add military focus...
+                    d3.select(this).select("text").classed("selected", true);
+                    milG.select("#milContainer").classed("selected-container", true);
+                    // ... and bring the military rects to the barchart base
+                    rects.selectAll(".civilian")
+                        .transition().duration(1000)
+                        .attr("y",0)
+                        .attr("height", function(d) { return yScale(d.military)-yScale(d.military+d.civilian); })
+                    rects.selectAll(".military")
+                        .transition().duration(1000)
+                        .attr("y", function(d) { return yScale(0)-yScale(d.civilian); })
+                        .attr("height", function(d) { return yScale(0)-yScale(d.military); })
+                  });
   milG.append("rect")
       .attr("width", "18px")
       .attr("height", "18px")
@@ -245,32 +270,35 @@ function setCountryInfo(state, idx) {
       .attr("dy", "1.05em")
       .classed("selected", true)
       .text("Military")
-      .on("click", function(){
-        var rects = d3.select("#stack").select("#rects");
-        info.selectAll("text").classed("selected", false);
-        info.selectAll(".selected-container").classed("selected-container", false);
-        d3.select(this).classed("selected", true);
-        milG.select("#milContainer").classed("selected-container", true);
+  milG.append("rect")
+      .attr("x", -5)
+      .attr("y", -5)
+      .attr("height", function(){ return milG.node().getBBox().height+10; })
+      .attr("width", function(){ return milG.node().getBBox().width+10; })
+      .attr("fill", "none")
+      .attr("id", "milContainer")
+      .classed("selected-container", true)
 
-        rects.selectAll(".civilian")
-            .transition().duration(1000)
-            .attr("y",0)
-            .attr("height", function(d) { return yScale(d.military)-yScale(d.military+d.civilian); })
-        rects.selectAll(".military")
-            .transition().duration(1000)
-            .attr("y", function(d) { return yScale(0)-yScale(d.civilian); })
-            .attr("height", function(d) { return yScale(0)-yScale(d.military); })
-      })
-    milG.append("rect")
-        .attr("x", -5)
-        .attr("y", -5)
-        .attr("height", function(){ return milG.node().getBBox().height+10; })
-        .attr("width", function(){ return milG.node().getBBox().width+10; })
-        .attr("fill", "none")
-        .attr("id", "milContainer")
-        .classed("selected-container", true)
-
-  var civG = info.append("g").attr("transform", "translate("+stackBounds.width/1.7+","+stackBounds.height/50+")");
+  var civG = info.append("g")
+                  .attr("transform", "translate("+stackBounds.width/1.7+","+stackBounds.height/50+")")
+                  .on("click", function(d) { // when civilian is selected...
+                    var rects = d3.select("#stack").select("#rects");
+                    // ... clear military focus...
+                    info.selectAll("text").classed("selected", false);
+                    info.selectAll(".selected-container").classed("selected-container", false);
+                    // ... add civilian focus...
+                    d3.select(this).select("text").classed("selected", true);
+                    civG.select("#civContainer").classed("selected-container", true);
+                    // ... and bring the civilian rects to the barchart base
+                    rects.selectAll(".military")
+                        .transition().duration(1000)
+                        .attr("y",0)
+                        .attr("height", function(d) { return yScale(d.civilian)-yScale(d.military+d.civilian); })
+                    rects.selectAll(".civilian")
+                        .transition().duration(1000)
+                        .attr("y", function(d) { return yScale(0)-yScale(d.military); })
+                        .attr("height", function(d) { return yScale(0)-yScale(d.civilian); })
+                  });
   civG.append("rect")
       .attr("width", "18px")
       .attr("height", "18px")
@@ -280,21 +308,6 @@ function setCountryInfo(state, idx) {
       .attr("x", 30)
       .attr("dy", "1.05em")
       .text("Civilian")
-      .on("click", function(d) {
-        var rects = d3.select("#stack").select("#rects");
-        info.selectAll("text").classed("selected", false);
-        info.selectAll(".selected-container").classed("selected-container", false);
-        d3.select(this).classed("selected", true);
-        civG.select("#civContainer").classed("selected-container", true);
-        rects.selectAll(".military")
-            .transition().duration(1000)
-            .attr("y",0)
-            .attr("height", function(d) { return yScale(d.civilian)-yScale(d.military+d.civilian); })
-        rects.selectAll(".civilian")
-            .transition().duration(1000)
-            .attr("y", function(d) { return yScale(0)-yScale(d.military); })
-            .attr("height", function(d) { return yScale(0)-yScale(d.civilian); })
-      })
   civG.append("rect")
       .attr("x", -5)
       .attr("y", -5)
@@ -308,14 +321,12 @@ function setCountryInfo(state, idx) {
 }
 
 function fillStack(yearList, i) {
-
-  var maxRatio = d3.max(yearList, function(dict) { return dict.civilian+dict.military; })
+  // pick the highest value for rescaling the barchart
+  var maxRatio = d3.max(yearList, function(dict) { return dict.total; })
   yScale = yScale.domain([0, maxRatio+(0.1*maxRatio)]);
-  d3.select("#yAxis")
-    .transition().duration(1000)
-    .call(d3.axisLeft(yScale));
+  d3.select("#yAxis").transition().duration(1000).call(d3.axisLeft(yScale));
 
-  var svgR = d3.select("#rects");
+  var svgR = d3.select("#stack").select("#rects");
 
   var newGr = svgR.selectAll("g")
                   .data(yearList)
@@ -326,9 +337,9 @@ function fillStack(yearList, i) {
                                     var y = d3.event.pageY
                                     var tt = d3.select("#tooltip")
                                     tt.html("<h4><b><i>"+d.year+"</i></b></h4>"+
-                                              "<h5>Total Deaths: <i>"+numFormatter(d.total)+"</i></h5>"+
-                                              "<h6 style='padding-left:10px;'>Civilian Deaths: <i>"+numFormatter(d.civilian)+"</i></h6>"+
-                                              "<h6 style='padding-left:10px;'>Military Deaths: <i>"+numFormatter(d.military)+"</i></h6>")
+                                            "<h5>Total Deaths: <i>"+numFormatter(d.total)+"</i></h5>"+
+                                            "<h6 style='padding-left:10px;'>Civilian Deaths: <i>"+numFormatter(d.civilian)+"</i></h6>"+
+                                            "<h6 style='padding-left:10px;'>Military Deaths: <i>"+numFormatter(d.military)+"</i></h6>")
                                       .style("left", (x-d3.select("#tooltip").node().getBoundingClientRect().width)+"px")
                                       .style("top", (y-d3.select("#tooltip").node().getBoundingClientRect().height)+"px")
                                       .transition().duration(200)
@@ -338,7 +349,7 @@ function fillStack(yearList, i) {
                                     d3.select("#tooltip").transition().duration(200).style("opacity", 0);
                                   })
                   .attr("transform", function(d) {
-                    return "translate("+xScale(d.year)+","+yScale(d.military+d.civilian)+")";
+                                    return "translate("+xScale(d.year)+","+yScale(d.total)+")";
                   })
 
   newGr.append("rect")
@@ -346,7 +357,7 @@ function fillStack(yearList, i) {
       .transition().duration(1000)
       .attr("width", xScale.bandwidth())
       .attr("fill", colorScale(i))
-      .attr("height", function(d) { return yScale(d.military)-yScale(d.military+d.civilian); })
+      .attr("height", function(d) { return yScale(d.military)-yScale(d.total); })
 
   newGr.append("rect")
       .classed("military", true)
@@ -358,42 +369,36 @@ function fillStack(yearList, i) {
 }
 
 function fillSunburst(dictDeathRatio, idx) {
-
   var width = sunburstBounds.width;
   var height = sunburstBounds.height;
   var radius = Math.min(width-xpad, height-ypad)/2;
 
-  var g = d3.select('#sunburst')
-      .select("#chart")
-      .attr('transform', 'translate('+(width-xpad)/2+','+(height-ypad)/2+')');
+  var g = d3.select('#sunburst').select("#chart")
+            .attr('transform', 'translate('+(width-xpad)/2+','+(height)/2+')');
 
-  // Data strucure
-  var partition = d3.partition()
-      .size([2 * Math.PI, radius]);
+  // Coordinate shift: cartesian -> polar
+  var partition = d3.partition().size([2*Math.PI, radius]);
 
-  // Find data root
-  var root = d3.hierarchy(dictDeathRatio)
-      .sum(function (d) { return d.size});
+  // hierarchical dataset with an added property (size)
+  var root = d3.hierarchy(dictDeathRatio).sum(function (d) { return d.size });
 
-  // Size arcs
   partition(root);
 
+  // curved path generator
   var arc = d3.arc()
       .startAngle(function (d) { return d.x0; })
       .endAngle(function (d) { return d.x1; })
       .innerRadius(function (d) { return d.y0; })
       .outerRadius(function (d) { return d.y1; });
 
-  // Put it all together
   g.selectAll('path')
       .data(root.descendants())
       .enter().append('path')
       .on("mouseover", function(d) {
                       var g = d3.select("#percentage");
-                      g.selectAll("text").remove()
+                      g.selectAll("text").remove();
 
-                      g.append("text")
-                      .text(d.data.name+":")
+                      g.append("text").text(d.data.name+":")
 
                       g.append("text")
                       .text(((d.value*100)/root.value).toFixed(1)+"%")
@@ -403,16 +408,39 @@ function fillSunburst(dictDeathRatio, idx) {
                       .text("of "+numFormatter(root.value))
                       .attr("dy", "2em");
 
-                      g.attr('transform', 'translate('+(((width-xpad)/2)-(g.node().getBBox().width/2))+','+(((height-ypad)/2)-(g.node().getBBox().height/4))+')')
+                      g.attr('transform', 'translate('+
+                              (((width-xpad)/2)-(g.node().getBBox().width/2))+
+                              ','+
+                              (((height)/2)-(g.node().getBBox().height/4))+
+                              ')');
                       })
       .on("mouseout", function(d) {
-                      d3.select("#percentage").selectAll("text").remove()
+                      var g = d3.select("#percentage");
+                      g.selectAll("text").remove();
+                      g.append("text").text("Hover me")
+                      g.attr('transform', 'translate('+
+                              (((width-xpad)/2)-(g.node().getBBox().width/2))+
+                              ','+
+                              ((height)/2)+
+                              ')');
       })
       .attr("display", function (d) { return d.depth ? null : "none"; })
       .transition().duration(1000)
       .attr("d", arc)
       .attr("fill", colorScale(idx))
-      .attr("opacity", function (d) { return ((d.children? d:d.parent).data.name)=="Civilian"? 0.5:1; })
+      .attr("opacity", function (d) { return ((d.children? d:d.parent).data.name)=="Civilian"? 0.5:1; });
+
+      var g = d3.select("#percentage");
+      g.selectAll("text").remove()
+      g.append("text").text("Hover me")
+      g.attr('transform', 'translate('+
+              (((width-xpad)/2)-(g.node().getBBox().width/2))+
+              ','+
+              ((height)/2)+
+              ')')
+        .attr("opacity", 0)
+        .transition().duration(1000)
+        .attr("opacity", 1);
 
   }
 
@@ -428,19 +456,28 @@ function getYearsDeathRatio(state) {
 
   WWII_casualties.forEach(function(d) {
     if (d.COUNTRY==state) {
+
+      // fill the stacked barchart dataset
       var startYear = +(d.STARTDATE.substr(d.STARTDATE.length - 4));
       var endYear = +(d.ENDATE.substr(d.ENDATE.length - 4));
+      // ex. 1941-1939 = 2 (+1 considered years)
       var year_count = endYear-startYear+1;
+      // ex. fill 3 years
       for (i=0; i<year_count; i++) {
-        yearList.forEach(function(dict, idx) {
+        // scan the dictionary list until you find the correspondent year
+        yearList.some(function(dict, idx) {
           if (dict.year==startYear) {
-            yearList[idx].civilian += ((+d.DEATHSFINAL)/year_count)*(+d.CIVILIANRATE)
-            yearList[idx].military += ((+d.DEATHSFINAL)/year_count)*(1-(+d.CIVILIANRATE))
-            yearList[idx].total += (+d.DEATHSFINAL)/year_count
+            yearList[idx].civilian += ((+d.DEATHSFINAL)/year_count)*(+d.CIVILIANRATE);
+            yearList[idx].military += ((+d.DEATHSFINAL)/year_count)*(1-(+d.CIVILIANRATE));
+            yearList[idx].total += (+d.DEATHSFINAL)/year_count;
+            return dict.year===startYear
           }
         })
+        // once filled, move to the next year
         startYear++;
       }
+
+      // fill the sunburst diagram dataset
       if (d.TAGS=="holocaust-jewish")   dictDeathRatio["children"][0]["children"][1]["size"] += (+d.DEATHSFINAL*(+d.CIVILIANRATE))
       else                              dictDeathRatio["children"][0]["children"][0]["size"] += (+d.DEATHSFINAL*(+d.CIVILIANRATE))
       dictDeathRatio["children"][1]["size"] += (+d.DEATHSFINAL)*(1-(+d.CIVILIANRATE))

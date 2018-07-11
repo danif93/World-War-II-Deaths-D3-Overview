@@ -12,6 +12,15 @@
   height:100%;
 }
 
+.countries-legend rect {
+  width: 18px;
+  height: 18px;
+}
+
+.countries-legend text {
+  cursor: pointer;
+}
+
 .selected{
   opacity: 1;
 }
@@ -55,7 +64,7 @@
   stroke-width: 1px;
 }
 
-#stack-legend text {
+#stack-legend g {
   cursor: pointer;
 }
 
@@ -93,6 +102,7 @@
 .sunburst {
   height: 45%;
 }
+
 .sunburst path {
   stroke: #fff;
   cursor: help;
