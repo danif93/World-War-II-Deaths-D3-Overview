@@ -109,8 +109,7 @@ function setTimeLine() {
                           })
 
                           d3.select("#drag")
-                            .transition()
-                            .duration(1000)
+                            .transition().duration(1000)
                             .attr("x", xScale(d))
 
                           loadMap(date);
@@ -207,7 +206,7 @@ function updateEventMap(list_events) {
 
                           d3.select(this).attr("r", 9)
 
-                          d3.select("#tooltip").transition().duration(200).style("opacity", 1);
+                          d3.select("#tooltip").transition().duration(500).style("opacity", 1);
 
                           d3.select("#tooltip").style("left", (x+15)+"px")
                                  .style("top", y+"px")
@@ -215,7 +214,7 @@ function updateEventMap(list_events) {
                           })
           .on("mouseout", function(d) {
                           d3.select(this).attr("r", 6)
-                          d3.select("#tooltip").transition().duration(200).style("opacity", 0);
+                          d3.select("#tooltip").transition().duration(500).style("opacity", 0);
                           })
   })
 }

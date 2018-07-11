@@ -50,12 +50,29 @@
   height: 45%;
 }
 
-text .selected {
+#stack-legend rect.selected-container {
+  stroke: gray;
+  stroke-width: 1px;
+}
+
+#stack-legend text {
+  cursor: pointer;
+}
+
+.stackchart text.selected {
   font-weight: bold;
 }
 
 .stackchart #rects{
   cursor: help;
+}
+
+.stackchart #rects .civilian{
+  opacity: 0.5;
+}
+
+.stackchart #rects .military{
+  opacity: 1;
 }
 
 .tooltip {

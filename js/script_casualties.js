@@ -126,8 +126,7 @@ function setCountriesLegend() {
                     .attr("opacity", 0.3)
                     .attr("r", function(d) {return d.r;})
                   selCountry.selectAll("text")
-                    .transition()
-                    .duration(1000)
+                    .transition().duration(1000)
                     .attr("font-size", function(d) { return d.r/5; })
                   })
 }
@@ -234,7 +233,7 @@ function setCountryInfo(state, idx) {
   info.selectAll("g").remove();
   d3.select("#title").html(state);
 
-  var milG = info.append("g").attr("transform", "translate("+stackBounds.width/5+","+stackBounds.height/100+")");;
+  var milG = info.append("g").attr("transform", "translate("+stackBounds.width/5+","+stackBounds.height/50+")");;
   milG.append("rect")
       .attr("width", "18px")
       .attr("height", "18px")
@@ -244,8 +243,32 @@ function setCountryInfo(state, idx) {
       .attr("dy", "1.05em")
       .classed("selected", true)
       .text("Military")
+      .on("click", function(){
+        var rects = d3.select("#stack").select("#rects");
+        info.selectAll("text").classed("selected", false);
+        info.selectAll(".selected-container").classed("selected-container", false);
+        d3.select(this).classed("selected", true);
+        milG.select("#milContainer").classed("selected-container", true);
 
-  var civG = info.append("g").attr("transform", "translate("+stackBounds.width/1.7+","+stackBounds.height/100+")");
+        rects.selectAll(".civilian")
+            .transition().duration(1000)
+            .attr("y",0)
+            .attr("height", function(d) { return yScale(d.military)-yScale(d.military+d.civilian); })
+        rects.selectAll(".military")
+            .transition().duration(1000)
+            .attr("y", function(d) { return yScale(0)-yScale(d.civilian); })
+            .attr("height", function(d) { return yScale(0)-yScale(d.military); })
+      })
+    milG.append("rect")
+        .attr("x", -5)
+        .attr("y", -5)
+        .attr("height", function(){ return milG.node().getBBox().height+10; })
+        .attr("width", function(){ return milG.node().getBBox().width+10; })
+        .attr("fill", "none")
+        .attr("id", "milContainer")
+        .classed("selected-container", true)
+
+  var civG = info.append("g").attr("transform", "translate("+stackBounds.width/1.7+","+stackBounds.height/50+")");
   civG.append("rect")
       .attr("width", "18px")
       .attr("height", "18px")
@@ -255,6 +278,28 @@ function setCountryInfo(state, idx) {
       .attr("x", 30)
       .attr("dy", "1.05em")
       .text("Civilian")
+      .on("click", function(d) {
+        var rects = d3.select("#stack").select("#rects");
+        info.selectAll("text").classed("selected", false);
+        info.selectAll(".selected-container").classed("selected-container", false);
+        d3.select(this).classed("selected", true);
+        civG.select("#civContainer").classed("selected-container", true);
+        rects.selectAll(".military")
+            .transition().duration(1000)
+            .attr("y",0)
+            .attr("height", function(d) { return yScale(d.civilian)-yScale(d.military+d.civilian); })
+        rects.selectAll(".civilian")
+            .transition().duration(1000)
+            .attr("y", function(d) { return yScale(0)-yScale(d.military); })
+            .attr("height", function(d) { return yScale(0)-yScale(d.civilian); })
+      })
+  civG.append("rect")
+      .attr("x", -5)
+      .attr("y", -5)
+      .attr("height", function() { return civG.node().getBBox().height+10; })
+      .attr("width", function() { return civG.node().getBBox().width+12; })
+      .attr("id", "civContainer")
+      .attr("fill", "none")
 
   fillStack(yearList, idx);
   fillSunburst(dictDeathRatio, idx);
@@ -284,7 +329,8 @@ function fillStack(yearList, i) {
                                               "<h6 style='padding-left:10px;'>Military Deaths: <i>"+kFormatter(d.military)+"</i></h6>")
                                       .style("left", (x-d3.select("#tooltip").node().getBoundingClientRect().width)+"px")
                                       .style("top", (y-d3.select("#tooltip").node().getBoundingClientRect().height)+"px")
-                                      .transition().duration(200).style("opacity", 1);
+                                      .transition().duration(200)
+                                      .style("opacity", 1);
                                   })
                   .on("mouseout", function(d){
                                     d3.select("#tooltip").transition().duration(200).style("opacity", 0);
@@ -294,22 +340,19 @@ function fillStack(yearList, i) {
                   })
 
   newGr.append("rect")
+      .classed("civilian", true)
+      .transition().duration(1000)
       .attr("width", xScale.bandwidth())
       .attr("fill", colorScale(i))
       .attr("height", function(d) { return yScale(d.military)-yScale(d.military+d.civilian); })
-      .attr("opacity", 0)
-      .transition().duration(1000)
-      .attr("opacity", 0.5)
-
 
   newGr.append("rect")
-      .attr("width", xScale.bandwidth())
-      .attr("y", function(d) { return yScale(0)-yScale(d.civilian); })
-      .attr("fill", colorScale(i))
-      .attr("height", function(d) { return yScale(0)-yScale(d.military); })
-      .attr("opacity", 0)
+      .classed("military", true)
       .transition().duration(1000)
-      .attr("opacity", 1)
+      .attr("width", xScale.bandwidth())
+      .attr("fill", colorScale(i))
+      .attr("y", function(d) { return yScale(0)-yScale(d.civilian); })
+      .attr("height", function(d) { return yScale(0)-yScale(d.military); })
 }
 
 function fillSunburst(dictDeathRatio, idx) {
@@ -364,8 +407,7 @@ function fillSunburst(dictDeathRatio, idx) {
                       d3.select("#percentage").selectAll("text").remove()
       })
       .attr("display", function (d) { return d.depth ? null : "none"; })
-      .transition()
-      .duration(1000)
+      .transition().duration(1000)
       .attr("d", arc)
       .attr("fill", colorScale(idx))
       .attr("opacity", function (d) { return ((d.children? d:d.parent).data.name)=="Civilian"? 0.5:1; })
