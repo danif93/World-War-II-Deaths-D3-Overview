@@ -12,6 +12,11 @@
 }
 
 /**************** MAP ****************/
+#legend rect {
+  width: 15px;
+  height: 15px;
+}
+
 .map{
   height: 100%;
 }

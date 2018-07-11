@@ -45,8 +45,8 @@ window.onload = () => {
                     .domain([0,distinctCountries().length-1])
 
       warMonths.forEach(function(d) {
-                        if (d.YEAR >= 1939)
-                          months_list.push(d.MONTHS.substring(0,3)+" "+d.YEAR.substring(2,4));
+                          if (d.YEAR >= 1939)
+                            months_list.push(d.MONTHS.substring(0,3)+" "+d.YEAR.substring(2,4));
                         })
 
       xScale = d3.scaleBand()

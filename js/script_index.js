@@ -6,10 +6,6 @@ var pad = 20;
 var xScale;
 var invXScale;
 
-var drag = d3.drag()
-    .on("drag", function() { dragmove(this, d3.select('#drag')); })
-    .on("end", function() { dragend(this, d3.select('#drag')); });
-
 var timeLineBounds = d3.select("#timeline").node().getBoundingClientRect()
 
 ////////////////////////////  LOAD FILE   ////////////////////////////
@@ -22,7 +18,6 @@ window.onload = () => {
       csv_events.forEach(function (d) {
         d.event_pos = [+d.LAT, +d.LON];
       });
-
       events = csv_events;
   });
 
@@ -31,8 +26,7 @@ window.onload = () => {
         console.log(error);
   	    throw error;
       }
-      warMonths = csv_year;
-      warMonths.forEach(function(d){
+      csv_year.forEach(function(d){
         months_list.push(d.MONTHS.substring(0,3)+" "+d.YEAR.substring(2,4));
       })
       setTimeLine();
@@ -40,48 +34,42 @@ window.onload = () => {
 
   loadMap("February_1938");
   createLegend();
-
 }
 ////////////////////////////  END LOADING   ////////////////////////////
 
 function createLegend (){
-
-  var g = d3.select("#legend")
+  var g = d3.select("#legend");
 
   var status = ["Axis","Axis-occupied","Allies","Neutral"];
 
   var newgr = g.selectAll("g")
                .data(status)
                .enter()
-               .append("g")
+               .append("g");
 
   newgr.append("rect")
        .attr("y", function(d,i) { return 40+(i*25) })
-       .attr("width", 15)
-       .attr("height", 15)
-       .attr("class", function(d){ return d; });
+       .attr("class", function(d) { return d; });
 
   newgr.append("text")
        .attr("x", 25)
        .attr("y", function(d,i) { return 47+(i*25) })
        .attr("dy", ".35em")
        .text(function(d){ return d.replace("-", " ")});
-
 }
 
 function setTimeLine() {
-
   var svg = d3.select("#timeline");
-
+  // from month to svg
   xScale = d3.scaleBand()
               .range([pad, timeLineBounds.width-pad])
-              .domain(months_list)
+              .domain(months_list);
+  // from SVG to month
   invXScale = d3.scaleQuantize()
-              .range(warMonths)
-              .domain([pad, timeLineBounds.width-pad])
+              .range(months_list)
+              .domain([pad, timeLineBounds.width-pad]);
 
   svg.select("#xAxis")
-
             .attr("transform", "translate(0,"+(timeLineBounds.height/5)+")")
             .call(d3.axisBottom(xScale))
   svg.select("#xAxis")
@@ -89,34 +77,11 @@ function setTimeLine() {
             .attr("y", 0)
             .attr("x", 25)
             .attr("transform", "rotate(90)")
-            .on("click", function(d){
-                          xScale = d3.scaleBand()
-                                      .range([pad, timeLineBounds.width-pad])
-                                      .domain(months_list)
+            .on("click", function(yearMonth) { updateMap(yearMonth); });
 
-                          var arr = d.split(" ");
-                          var date = monthMap[arr[0]]+"19"+arr[1];
-                          var list_events_inside = []
-                          var list_events_outside = []
-
-                          events.forEach(function(ev){
-                            if (ev.DATE == date) {
-                              if (ev.event_pos[0] != 0)
-                                list_events_inside.push(ev)
-                              else
-                                list_events_outside.push(ev)
-                            }
-                          })
-
-                          d3.select("#drag")
-                            .transition().duration(1000)
-                            .attr("x", xScale(d))
-
-                          loadMap(date);
-
-                          updateOutEvents(list_events_outside);
-                          updateEventMap(list_events_inside);
-                        })
+  var drag = d3.drag()
+      .on("drag", function() { dragmove(this, d3.select('#drag')); })
+      .on("end", function() { dragend(this, d3.select('#drag')); });
 
   var dragrect = svg.select("#drag")
       .attr("x", pad)
@@ -128,28 +93,31 @@ function setTimeLine() {
 }
 
 function dragmove(d, elem) {
-  elem.attr("x", d.x = Math.max(pad+10, Math.min(timeLineBounds.width-pad, d3.event.x))-elem.attr("width")/2)
+  elem.attr("x", d.x = Math.max(pad+xScale.bandwidth(), Math.min(timeLineBounds.width-pad, d3.event.x))-xScale.bandwidth())
 }
 
 function dragend(d, elem){
+  updateMap(invXScale(elem.attr('x')))
+}
 
-  var dateDict = invXScale(elem.attr('x'))
-  var date = dateDict.MONTHS+"_"+dateDict.YEAR
-
-  var list_events_inside = []
-  var list_events_outside = []
+function updateMap(yearMonth) {
+  var arr = yearMonth.split(" ");
+  var date = monthMap[arr[0]]+"19"+arr[1];
+  var list_events_inside = [];
+  var list_events_outside = [];
 
   events.forEach(function(ev){
     if (ev.DATE == date) {
-      if (ev.event_pos[0] != 0)
-        list_events_inside.push(ev)
-      else
-        list_events_outside.push(ev)
+      if (ev.event_pos[0] != 0)   list_events_inside.push(ev)
+      else    list_events_outside.push(ev)
     }
-  })
+  });
+
+  d3.select("#drag")
+    .transition().duration(1000)
+    .attr("x", xScale(yearMonth));
 
   loadMap(date);
-
   updateOutEvents(list_events_outside);
   updateEventMap(list_events_inside);
 }
@@ -168,9 +136,7 @@ function loadMap (year) {
 }
 
 function drawMap (world, year) {
-
   d3.select("#map").selectAll("path").remove();
-
   d3.select("#map").selectAll("path")
                    .data(topojson.feature(world, world.objects[year]).features)
                    .enter()
@@ -180,18 +146,11 @@ function drawMap (world, year) {
                    .attr("class", function(d) { return d3.select(this).attr("class")+" "+d.properties.status; })
 }
 
-function clearPoints() {
-  d3.select("#points").selectAll("circle").remove();
-}
-
 function updateEventMap(list_events) {
-
-  clearPoints();
+  d3.select("#points").selectAll("circle").remove();
 
   list_events.forEach(function(ev){
-
     var point_pos = ev.event_pos;
-
     var points = d3.select("#points");
 
     points.data([point_pos])
@@ -201,32 +160,31 @@ function updateEventMap(list_events) {
           .attr("class", "gold")
           .attr("r", "6px")
           .on("mouseover", function(d) {
-                          var x = d3.event.pageX
-                          var y = d3.event.pageY
+                            var x = d3.event.pageX
+                            var y = d3.event.pageY
 
-                          d3.select(this).attr("r", 9)
+                            d3.select(this).attr("r", 9)
 
-                          d3.select("#tooltip").transition().duration(500).style("opacity", 1);
+                            d3.select("#tooltip").transition().duration(500).style("opacity", 1);
 
-                          d3.select("#tooltip").style("left", (x+15)+"px")
-                                 .style("top", y+"px")
-                                 .html("<h4><i>"+ ev.SUMMARY + "</i></h4>" + ev.DETAILED_INFORMATION)
+                            d3.select("#tooltip")
+                              .style("left", (x+15)+"px")
+                              .style("top", y+"px")
+                              .html("<h4><i>"+ev.SUMMARY+"</i></h4>"+ev.DETAILED_INFORMATION)
                           })
           .on("mouseout", function(d) {
-                          d3.select(this).attr("r", 6)
-                          d3.select("#tooltip").transition().duration(500).style("opacity", 0);
+                            d3.select(this).attr("r", 6)
+                            d3.select("#tooltip").transition().duration(500).style("opacity", 0);
                           })
   })
 }
 
 function updateOutEvents(list_events) {
-
   d3.selectAll("ul").remove();
 
   var title = d3.select("#event_outside");
 
   if (list_events.length > 0) {
-
     var ul = title.append("ul");
 
     list_events.forEach(function(ev){
