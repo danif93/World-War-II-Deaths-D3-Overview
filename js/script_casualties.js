@@ -13,8 +13,10 @@ var yScale = d3.scaleLinear()
                 .domain([0, 1000000])
                 .range([stackBounds.height-ypad, ypad]);
 
-function kFormatter(num) {
-  return num > 999 ? (num/1000).toFixed(1) + 'k' : parseInt(num)
+function numFormatter(num) {
+  if (num > 999999) return (num/1000000).toFixed(1)+'M';
+  else if (num > 999) return (num/1000).toFixed(1)+'k';
+  return parseInt(num)
 }
 
 ////////////////////////////  LOAD FILE & INTIALISE SVG  ////////////////////////////
@@ -324,9 +326,9 @@ function fillStack(yearList, i) {
                                     var y = d3.event.pageY
                                     var tt = d3.select("#tooltip")
                                     tt.html("<h4><b><i>"+d.year+"</i></b></h4>"+
-                                              "<h5>Total Deaths: <i>"+kFormatter(d.total)+"</i></h5>"+
-                                              "<h6 style='padding-left:10px;'>Civilian Deaths: <i>"+kFormatter(d.civilian)+"</i></h6>"+
-                                              "<h6 style='padding-left:10px;'>Military Deaths: <i>"+kFormatter(d.military)+"</i></h6>")
+                                              "<h5>Total Deaths: <i>"+numFormatter(d.total)+"</i></h5>"+
+                                              "<h6 style='padding-left:10px;'>Civilian Deaths: <i>"+numFormatter(d.civilian)+"</i></h6>"+
+                                              "<h6 style='padding-left:10px;'>Military Deaths: <i>"+numFormatter(d.military)+"</i></h6>")
                                       .style("left", (x-d3.select("#tooltip").node().getBoundingClientRect().width)+"px")
                                       .style("top", (y-d3.select("#tooltip").node().getBoundingClientRect().height)+"px")
                                       .transition().duration(200)
@@ -398,7 +400,7 @@ function fillSunburst(dictDeathRatio, idx) {
                       .attr("dy", "1em")
 
                       g.append("text")
-                      .text("of "+kFormatter(root.value))
+                      .text("of "+numFormatter(root.value))
                       .attr("dy", "2em");
 
                       g.attr('transform', 'translate('+(((width-xpad)/2)-(g.node().getBBox().width/2))+','+(((height-ypad)/2)-(g.node().getBBox().height/4))+')')

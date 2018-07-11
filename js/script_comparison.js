@@ -16,8 +16,10 @@ var LineGenerator = d3.line()
 var stateDeaths = {};
 var currentMaxDeaths = 0;
 
-function kFormatter(num) {
-  return num > 999 ? (num/1000).toFixed(1) + 'k' : parseInt(num)
+function numFormatter(num) {
+  if (num > 999999) return (num/1000000).toFixed(1)+'M';
+  else if (num > 999) return (num/1000).toFixed(1)+'k';
+  return parseInt(num)
 }
 
 ////////////////////////////  LOAD FILE & INTIALISE SVG  ////////////////////////////
@@ -210,9 +212,9 @@ function addInfo(state, colorIdx){
                           tt.append("li")
                             .html("<h4 style='color:"+colorScale(c.__data__.color)+"'><b><i>"+c.__data__.state+"</i></b></h4>"+
                                   "<h5>Period: <i>"+c.__data__.month+"</i></h5>"+
-                                  "<h5>Total Deaths: <i>"+kFormatter(c.__data__.deaths)+"</i></h5>"+
-                                  "<h6 style='padding-left:10px;'>Civilian Deaths: <i>"+kFormatter(c.__data__.civ)+"</i></h6>"+
-                                  "<h6 style='padding-left:10px;'>Military Deaths: <i>"+kFormatter(c.__data__.mil)+"</i></h6>")
+                                  "<h5>Total Deaths: <i>"+numFormatter(c.__data__.deaths)+"</i></h5>"+
+                                  "<h6 style='padding-left:10px;'>Civilian Deaths: <i>"+numFormatter(c.__data__.civ)+"</i></h6>"+
+                                  "<h6 style='padding-left:10px;'>Military Deaths: <i>"+numFormatter(c.__data__.mil)+"</i></h6>")
                         })
                         tt.style("left", (x-d3.select("#tooltip").node().getBoundingClientRect().width)+"px")
                           .style("top", (y-d3.select("#tooltip").node().getBoundingClientRect().height)+"px")
@@ -222,7 +224,7 @@ function addInfo(state, colorIdx){
       .on("mouseout", function(d){
                         d3.select("#tooltip").style("opacity", 0);
                         d3.select("#tooltip").selectAll("li").remove()
-                      })  
+                      })
 }
 
 function removeInfo(state){
