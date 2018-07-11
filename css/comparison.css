@@ -1,14 +1,23 @@
-.countries{
+.countries {
   height: 100%;
-  padding-top: 10px;
+  padding-top: 20px;
 }
 
-.linechart{
-  height: 100%;
+.countries rect {
+  width: 18px;
+  height: 18px;
 }
 
-.selected{
+.countries text {
+  cursor: pointer;
+}
+
+.countries rect.selected {
   opacity: 1;
+}
+
+.linechart {
+  height: 100%;
 }
 
 .lines {
@@ -45,5 +54,4 @@ svg #xAxis {
   font: 10px sans-serif;
   padding: 8px;
   margin-bottom: 5px;
-
 }
