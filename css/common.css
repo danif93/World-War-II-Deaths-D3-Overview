@@ -9,6 +9,10 @@ header{
   padding-bottom: 12px;
 }
 
+header .title {
+  text-align: center;
+}
+
 .info {
   font-size: 16px;
   font-style: italic;
