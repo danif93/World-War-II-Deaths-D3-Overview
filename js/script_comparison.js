@@ -215,7 +215,6 @@ function addInfo(state, colorIdx){
                           var tr = tt.append("tr");
                           for (j=0; j<edge; j++) {
                             if (i*edge+j == elems._groups[0].length) break;
-                            console.log(i*edge+j);
                             tr.append("td")
                               .html("<h4 style='color:"+colorScale(elems._groups[0][i*edge+j].__data__.color)+"'><b><i>"+elems._groups[0][i*edge+j].__data__.state+"</i></b></h4>"+
                                     "<h5>Period: <i>"+elems._groups[0][i*edge+j].__data__.month+"</i></h5>"+
