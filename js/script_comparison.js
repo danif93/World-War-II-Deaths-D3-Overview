@@ -30,7 +30,15 @@ window.onload = () => {
       console.log(error);
 	    throw error;
     }
-    warMonths = csv_year;
+    csv_year.forEach(function(d) {
+                        if (d.YEAR >= 1939)
+                          months_list.push(d.MONTHS.substring(0,3)+" "+d.YEAR.substring(2,4));
+                      })
+    xScale = d3.scaleBand()
+                .range([xpad, svgBounds.width-xpad])
+                .domain(months_list)
+
+    createLineChart();
   });
 
   d3.csv("../datasets/WWII_casualties.csv", function (error, csv_wwii) {
@@ -44,17 +52,7 @@ window.onload = () => {
       colorScale = d3.scaleSequential(d3.interpolateRainbow)
                     .domain([0,distinctCountries().length-1])
 
-      warMonths.forEach(function(d) {
-                          if (d.YEAR >= 1939)
-                            months_list.push(d.MONTHS.substring(0,3)+" "+d.YEAR.substring(2,4));
-                        })
-
-      xScale = d3.scaleBand()
-                  .range([xpad, svgBounds.width-xpad])
-                  .domain(months_list)
-
       setCountriesLegend();
-      createLineChart();
   });
 }
 ////////////////////////////  END LOAD & INITIALISATION  ////////////////////////////
@@ -209,23 +207,31 @@ function addInfo(state, colorIdx){
                         var tt = d3.select("#tooltip")
                         // select all the overlapping circles in that position
                         var elems = d3.selectAll(document.elementsFromPoint(d3.event.x, d3.event.y)).filter("circle")
+                        var edge = Math.floor(Math.sqrt(elems._groups[0].length))
+                        if (edge != elems._groups[0].length ) edge += 1
 
-                        elems._groups[0].forEach(function(c){
-                          tt.append("li")
-                            .html("<h4 style='color:"+colorScale(c.__data__.color)+"'><b><i>"+c.__data__.state+"</i></b></h4>"+
-                                  "<h5>Period: <i>"+c.__data__.month+"</i></h5>"+
-                                  "<h5>Total Deaths: <i>"+numFormatter(c.__data__.deaths)+"</i></h5>"+
-                                  "<h6 style='padding-left:10px;'>Civilian Deaths: <i>"+numFormatter(c.__data__.civ)+"</i></h6>"+
-                                  "<h6 style='padding-left:10px;'>Military Deaths: <i>"+numFormatter(c.__data__.mil)+"</i></h6>")
-                        })
-                        tt.style("left", (x-d3.select("#tooltip").node().getBoundingClientRect().width)+"px")
+                        for (i=0; i<edge; i++) {
+                          var tr = tt.append("tr");
+                          for (j=0; j<edge; j++) {
+                            if (i*edge+j == elems._groups[0].length) break;
+                            console.log(i*edge+j);
+                            tr.append("td")
+                              .html("<h4 style='color:"+colorScale(elems._groups[0][i*edge+j].__data__.color)+"'><b><i>"+elems._groups[0][i*edge+j].__data__.state+"</i></b></h4>"+
+                                    "<h5>Period: <i>"+elems._groups[0][i*edge+j].__data__.month+"</i></h5>"+
+                                    "<h5>Total Deaths: <i>"+numFormatter(elems._groups[0][i*edge+j].__data__.deaths)+"</i></h5>"+
+                                    "<h6>Civilian Deaths: <i>"+numFormatter(elems._groups[0][i*edge+j].__data__.civ)+"</i></h6>"+
+                                    "<h6>Military Deaths: <i>"+numFormatter(elems._groups[0][i*edge+j].__data__.mil)+"</i></h6>")
+                            }
+                          if (i*edge+j == elems._groups[0].length) break;
+                        }
+
+                        tt.style("left", (x-d3.select("#tooltip").node().getBoundingClientRect().width*(0.8))+"px")
                           .style("top", (y-d3.select("#tooltip").node().getBoundingClientRect().height)+"px")
-
                         tt.transition().duration(500).style("opacity", 1);
                       })
       .on("mouseout", function(d){
                         d3.select("#tooltip").style("opacity", 0);
-                        d3.select("#tooltip").selectAll("li").remove()
+                        d3.select("#tooltip").selectAll("tr").remove()
                       })
 }
 
