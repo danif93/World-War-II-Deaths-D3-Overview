@@ -208,8 +208,9 @@ function addInfo(state, colorIdx){
                         // select all the overlapping circles in that position
                         var elems = d3.selectAll(document.elementsFromPoint(d3.event.x, d3.event.y)).filter("circle")
                         var edge = Math.floor(Math.sqrt(elems._groups[0].length))
+                        // if it is not a perfect square...
                         if (edge != elems._groups[0].length ) edge += 1
-
+                        // fill the table with infos
                         for (i=0; i<edge; i++) {
                           var tr = tt.append("tr");
                           for (j=0; j<edge; j++) {
@@ -224,7 +225,6 @@ function addInfo(state, colorIdx){
                             }
                           if (i*edge+j == elems._groups[0].length) break;
                         }
-
                         tt.style("left", (x-d3.select("#tooltip").node().getBoundingClientRect().width*(0.8))+"px")
                           .style("top", (y-d3.select("#tooltip").node().getBoundingClientRect().height)+"px")
                         tt.transition().duration(500).style("opacity", 1);
